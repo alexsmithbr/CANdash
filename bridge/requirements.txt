@@ -1,0 +1,2 @@
+aiohttp>=3.9,<4
+python-can>=4.4,<5

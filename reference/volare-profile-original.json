@@ -1,0 +1,197 @@
+{
+  "schema_version": 1,
+  "id": "volare-cummins-cm2220",
+  "name": "Volare / Cummins CM2220",
+  "network": {
+    "protocol": "j1939",
+    "bitrate": 250000,
+    "listen_only_default": true
+  },
+  "validity": {
+    "drop_j1939_not_available": true,
+    "drop_j1939_error": true,
+    "drop_reserved_enum_values": true,
+    "drop_outside_dbc_range": true,
+    "retain_last_valid_value": true
+  },
+  "update_indicator": {
+    "enabled": true,
+    "color": "#22c55e",
+    "on_ms": 90,
+    "fade_ms": 160
+  },
+  "gauges": [
+    {
+      "id": "vehicle_speed",
+      "title": "Vehicle speed",
+      "gauge_type": "speedometer",
+      "unit": "km/h",
+      "minimum": 0,
+      "maximum": 120,
+      "source": {
+        "source_address": 238,
+        "source_hex": "0xEE",
+        "pgn": 65132,
+        "pgn_hex": "0x0FE6C",
+        "message": "TCO1",
+        "signal": "TachographVehicleSpeed"
+      },
+      "fallback_sources": [
+        {
+          "source_address": 0,
+          "source_hex": "0x00",
+          "pgn": 65265,
+          "pgn_hex": "0x0FEF1",
+          "message": "CCVS",
+          "signal": "WheelBasedVehicleSpeed"
+        }
+      ],
+      "stale_after_ms": 1000
+    },
+    {
+      "id": "engine_speed",
+      "title": "Engine speed",
+      "gauge_type": "tachometer",
+      "unit": "rpm",
+      "minimum": 0,
+      "maximum": 3000,
+      "source": {
+        "source_address": 0,
+        "source_hex": "0x00",
+        "pgn": 61444,
+        "pgn_hex": "0x0F004",
+        "message": "EEC1",
+        "signal": "EngSpeed"
+      },
+      "stale_after_ms": 500
+    },
+    {
+      "id": "coolant_temperature",
+      "title": "Coolant temperature",
+      "gauge_type": "radial",
+      "unit": "deg C",
+      "minimum": 0,
+      "maximum": 120,
+      "source": {
+        "source_address": 0,
+        "source_hex": "0x00",
+        "pgn": 65262,
+        "pgn_hex": "0x0FEEE",
+        "message": "ET1",
+        "signal": "EngCoolantTemp"
+      },
+      "stale_after_ms": 3000
+    },
+    {
+      "id": "battery_voltage",
+      "title": "Battery voltage",
+      "gauge_type": "numeric",
+      "unit": "V",
+      "minimum": 18,
+      "maximum": 32,
+      "source": {
+        "source_address": 0,
+        "source_hex": "0x00",
+        "pgn": 65271,
+        "pgn_hex": "0x0FEF7",
+        "message": "VEP1",
+        "signal": "BatteryPotential_PowerInput1"
+      },
+      "stale_after_ms": 3000
+    },
+    {
+      "id": "oil_pressure",
+      "title": "Engine oil pressure",
+      "gauge_type": "radial",
+      "unit": "kPa",
+      "minimum": 0,
+      "maximum": 600,
+      "source": {
+        "source_address": 0,
+        "source_hex": "0x00",
+        "pgn": 65263,
+        "pgn_hex": "0x0FEEF",
+        "message": "EFL_P1",
+        "signal": "EngOilPress"
+      },
+      "stale_after_ms": 2000
+    },
+    {
+      "id": "fuel_level",
+      "title": "Fuel level",
+      "gauge_type": "bar",
+      "unit": "%",
+      "minimum": 0,
+      "maximum": 100,
+      "source": {
+        "source_address": 23,
+        "source_hex": "0x17",
+        "pgn": 65276,
+        "pgn_hex": "0x0FEFC",
+        "message": "DD",
+        "signal": "FuelLevel1"
+      },
+      "stale_after_ms": 3000
+    },
+    {
+      "id": "fuel_rate",
+      "title": "Fuel rate",
+      "gauge_type": "numeric",
+      "unit": "L/h",
+      "minimum": 0,
+      "maximum": 50,
+      "source": {
+        "source_address": 0,
+        "source_hex": "0x00",
+        "pgn": 65266,
+        "pgn_hex": "0x0FEF2",
+        "message": "LFE",
+        "signal": "EngFuelRate"
+      },
+      "stale_after_ms": 1500
+    },
+    {
+      "id": "barometric_pressure",
+      "title": "Barometric pressure",
+      "gauge_type": "numeric",
+      "unit": "kPa",
+      "minimum": 80,
+      "maximum": 110,
+      "source": {
+        "source_address": 0,
+        "source_hex": "0x00",
+        "pgn": 65269,
+        "pgn_hex": "0x0FEF5",
+        "message": "AMB",
+        "signal": "BarometricPress"
+      },
+      "stale_after_ms": 3000
+    },
+    {
+      "id": "tachograph_odometer",
+      "title": "Tachograph distance",
+      "gauge_type": "odometer",
+      "unit": "km",
+      "minimum": 0,
+      "source": {
+        "source_address": 238,
+        "source_hex": "0xEE",
+        "pgn": 65217,
+        "pgn_hex": "0x0FEC1",
+        "message": "VDHR",
+        "signal": "HghRslutionTotalVehicleDistance"
+      },
+      "stale_after_ms": 3000
+    }
+  ],
+  "excluded_sources": [
+    {
+      "source_address": 23,
+      "source_hex": "0x17",
+      "pgn": 65265,
+      "pgn_hex": "0x0FEF1",
+      "signal": "WheelBasedVehicleSpeed",
+      "reason": "The two validated captures always encode this signal as unavailable."
+    }
+  ]
+}

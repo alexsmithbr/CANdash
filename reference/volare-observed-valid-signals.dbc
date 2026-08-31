@@ -1,0 +1,593 @@
+VERSION "Volare capture-derived J1939/CANviz test DBC"
+
+NS_ :
+	NS_DESC_
+	CM_
+	BA_DEF_
+	BA_
+	VAL_
+	BA_DEF_DEF_
+	SIG_VALTYPE_
+	SG_MUL_VAL_
+
+BS_:
+
+BU_: Vector__XXX
+
+CM_ "Capture-derived source-aware DBC. Generic definitions originated in Konik-ai/j1939_dbc; validate before operational use.";
+
+BO_ 2364539648 EEC2_SA00: 8 Vector__XXX
+ SG_ SCRThermalManagementActive : 46|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ ActlMxAvailableEngPercentTorque : 48|8@1+ (0.4,0) [0|100] "%" Vector__XXX
+ SG_ EngPercentLoadAtCurrentSpeed : 16|8@1+ (1,0) [0|250] "%" Vector__XXX
+ SG_ RoadSpeedLimitStatus : 4|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ AccelPedalKickdownSwitch : 2|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ AccelPedal1LowIdleSwitch : 0|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ AccelPedalPos1 : 8|8@1+ (0.4,0) [0|100] "%" Vector__XXX
+
+BO_ 2364539904 EEC1_SA00: 8 Vector__XXX
+ SG_ SrcAddrssOfCtrllngDvcFrEngCntrl : 40|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ ActlEngPrcntTrqueHighResolution : 4|4@1+ (0.125,0) [0|0.875] "%" Vector__XXX
+ SG_ EngDemandPercentTorque : 56|8@1+ (1,-125) [-125|125] "%" Vector__XXX
+ SG_ EngSpeed : 24|16@1+ (0.125,0) [0|8031.875] "rpm" Vector__XXX
+ SG_ ActualEngPercentTorque : 16|8@1+ (1,-125) [-125|125] "%" Vector__XXX
+ SG_ DriversDemandEngPercentTorque : 8|8@1+ (1,-125) [-125|125] "%" Vector__XXX
+ SG_ EngTorqueMode : 0|4@1+ (1,0) [0|15] "" Vector__XXX
+
+BO_ 2364541440 EGF1_SA00: 8 Vector__XXX
+ SG_ EngIntakeAirMassFlowRate : 16|16@1+ (0.05,0) [0|3212.75] "kg/h" Vector__XXX
+
+BO_ 2365394770 AT1OGC1_SA52: 8 Vector__XXX
+ SG_ Aftrtrtmnt1OtltGsNOxSnsrNwPrtDvt : 32|8@1+ (1,-125) [-125|125] "ppm" Vector__XXX
+ SG_ Aftrtrtmnt1OtltGsNOxSnsrNwP_0000 : 16|16@1+ (0.1,-100) [-100|100] "%" Vector__XXX
+ SG_ Aftrtrtmnt1OtltGsNOxSnsrHtrRtio : 0|16@1+ (0.001,0) [0|64.255] "" Vector__XXX
+
+BO_ 2365484270 TCO1_SAEE: 8 Vector__XXX
+ SG_ VehicleOverspeed : 14|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ VehicleMotion : 6|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ TachographVehicleSpeed : 48|16@1+ (0.00390625,0) [0|250.996] "km/h" Vector__XXX
+ SG_ TachographOutputShaftSpeed : 32|16@1+ (0.125,0) [0|8031.875] "rpm" Vector__XXX
+ SG_ TachographPerformance : 28|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ SystemEvent : 24|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ DriverCardDriver1 : 12|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ Driver2WorkingState : 3|3@1+ (1,0) [0|7] "" Vector__XXX
+ SG_ Driver1WorkingState : 0|3@1+ (1,0) [0|7] "" Vector__XXX
+
+BO_ 2432498944 EEC9_SA00: 8 Vector__XXX
+ SG_ CmdedEngFuelRailPress : 32|16@1+ (0.00390625,0) [0|251] "MPa" Vector__XXX
+
+BO_ 2564882176 CM1_DAFF_SA00: 8 Vector__XXX
+ SG_ RqedPercentFanSpeed : 0|8@1+ (0.4,0) [0|100] "%" Vector__XXX
+
+BO_ 2565406464 ACKM_DAFF_SA00: 8 Vector__XXX
+ SG_ ControlByte M : 0|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ ParameterGroupNumber : 40|24@1+ (1,0) [0|16777215] "" Vector__XXX
+
+BO_ 2565472289 RQST_DA00_SA21: 3 Vector__XXX
+ SG_ ParameterGroupNumber : 0|24@1+ (1,0) [0|16777215] "" Vector__XXX
+
+BO_ 2565537536 RQST_DAFF_SA00: 3 Vector__XXX
+ SG_ ParameterGroupNumber : 0|24@1+ (1,0) [0|16777215] "" Vector__XXX
+
+BO_ 2565537790 RQST_DAFF_SAFE: 3 Vector__XXX
+ SG_ ParameterGroupNumber : 0|24@1+ (1,0) [0|16777215] "" Vector__XXX
+
+BO_ 2565603072 TPDT_DAFF_SA00: 8 Vector__XXX
+ SG_ SequenceNumber : 0|8@1+ (1,0) [0|255] "" Vector__XXX
+
+BO_ 2565603113 TPDT_DAFF_SA29: 8 Vector__XXX
+ SG_ SequenceNumber : 0|8@1+ (1,0) [0|255] "" Vector__XXX
+
+BO_ 2565668608 TPCM_DAFF_SA00: 8 Vector__XXX
+ SG_ TotalNumberOfPacketsEoMA m19 : 24|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ TotalMessageSizeEoMA m19 : 8|16@1+ (1,0) [0|64255] "counts" Vector__XXX
+ SG_ TotalMessageSizeBAM m32 : 8|16@1+ (1,0) [0|64255] "counts" Vector__XXX
+ SG_ TotalNumberOfPacketsBAM m32 : 24|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ ConnectionAbortReason m255 : 8|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ NextPacketNumberToBeSent m17 : 16|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ NumberOfPacketsThatCanBeSent m17 : 8|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ PGNumber : 40|24@1+ (1,0) [0|16777200] "" Vector__XXX
+ SG_ TotalNumberOfPackets m16 : 24|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ TotalMessageSize m16 : 8|16@1+ (1,0) [0|64255] "counts" Vector__XXX
+ SG_ ControlByte M : 0|8@1+ (1,0) [0|255] "" Vector__XXX
+
+BO_ 2565668649 TPCM_DAFF_SA29: 8 Vector__XXX
+ SG_ TotalNumberOfPacketsEoMA m19 : 24|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ TotalMessageSizeEoMA m19 : 8|16@1+ (1,0) [0|64255] "counts" Vector__XXX
+ SG_ TotalMessageSizeBAM m32 : 8|16@1+ (1,0) [0|64255] "counts" Vector__XXX
+ SG_ TotalNumberOfPacketsBAM m32 : 24|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ ConnectionAbortReason m255 : 8|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ NextPacketNumberToBeSent m17 : 16|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ NumberOfPacketsThatCanBeSent m17 : 8|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ PGNumber : 40|24@1+ (1,0) [0|16777200] "" Vector__XXX
+ SG_ TotalNumberOfPackets m16 : 24|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ TotalMessageSize m16 : 8|16@1+ (1,0) [0|64255] "counts" Vector__XXX
+ SG_ ControlByte M : 0|8@1+ (1,0) [0|255] "" Vector__XXX
+
+BO_ 2565799680 ACL_DAFF_SA00: 8 Vector__XXX
+ SG_ ArbitraryAddressCapable : 63|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ IndustryGroup M : 60|3@1+ (1,0) [0|7] "" Vector__XXX
+ SG_ VehicleSystemInstance : 56|4@1+ (1,0) [0|15] "" Vector__XXX
+ SG_ Function : 40|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ FunctionInstance : 35|5@1+ (1,0) [0|31] "" Vector__XXX
+ SG_ ECUInstance : 32|3@1+ (1,0) [0|7] "" Vector__XXX
+ SG_ ManufacturerCode : 21|11@1+ (1,0) [0|2047] "" Vector__XXX
+ SG_ IdentityNumber : 0|21@1+ (1,0) [0|2097152] "" Vector__XXX
+ SG_ VehicleSystem m0 : 49|7@1+ (1,0) [0|127] "" Vector__XXX
+ SG_ VehicleSystem5 m5 : 49|7@1+ (1,0) [0|127] "" Vector__XXX
+ SG_ VehicleSystem4 m4 : 49|7@1+ (1,0) [0|127] "" Vector__XXX
+ SG_ VehicleSystem3 m3 : 49|7@1+ (1,0) [0|127] "" Vector__XXX
+ SG_ VehicleSystem2 m2 : 49|7@1+ (1,0) [0|127] "" Vector__XXX
+ SG_ VehicleSystem1 m1 : 49|7@1+ (1,0) [0|127] "" Vector__XXX
+
+BO_ 2565799721 ACL_DAFF_SA29: 8 Vector__XXX
+ SG_ ArbitraryAddressCapable : 63|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ IndustryGroup M : 60|3@1+ (1,0) [0|7] "" Vector__XXX
+ SG_ VehicleSystemInstance : 56|4@1+ (1,0) [0|15] "" Vector__XXX
+ SG_ Function : 40|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ FunctionInstance : 35|5@1+ (1,0) [0|31] "" Vector__XXX
+ SG_ ECUInstance : 32|3@1+ (1,0) [0|7] "" Vector__XXX
+ SG_ ManufacturerCode : 21|11@1+ (1,0) [0|2047] "" Vector__XXX
+ SG_ IdentityNumber : 0|21@1+ (1,0) [0|2097152] "" Vector__XXX
+ SG_ VehicleSystem m0 : 49|7@1+ (1,0) [0|127] "" Vector__XXX
+ SG_ VehicleSystem5 m5 : 49|7@1+ (1,0) [0|127] "" Vector__XXX
+ SG_ VehicleSystem4 m4 : 49|7@1+ (1,0) [0|127] "" Vector__XXX
+ SG_ VehicleSystem3 m3 : 49|7@1+ (1,0) [0|127] "" Vector__XXX
+ SG_ VehicleSystem2 m2 : 49|7@1+ (1,0) [0|127] "" Vector__XXX
+ SG_ VehicleSystem1 m1 : 49|7@1+ (1,0) [0|127] "" Vector__XXX
+
+BO_ 2565799762 ACL_DAFF_SA52: 8 Vector__XXX
+ SG_ ArbitraryAddressCapable : 63|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ IndustryGroup M : 60|3@1+ (1,0) [0|7] "" Vector__XXX
+ SG_ VehicleSystemInstance : 56|4@1+ (1,0) [0|15] "" Vector__XXX
+ SG_ Function : 40|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ FunctionInstance : 35|5@1+ (1,0) [0|31] "" Vector__XXX
+ SG_ ECUInstance : 32|3@1+ (1,0) [0|7] "" Vector__XXX
+ SG_ ManufacturerCode : 21|11@1+ (1,0) [0|2047] "" Vector__XXX
+ SG_ IdentityNumber : 0|21@1+ (1,0) [0|2097152] "" Vector__XXX
+ SG_ VehicleSystem m0 : 49|7@1+ (1,0) [0|127] "" Vector__XXX
+ SG_ VehicleSystem5 m5 : 49|7@1+ (1,0) [0|127] "" Vector__XXX
+ SG_ VehicleSystem4 m4 : 49|7@1+ (1,0) [0|127] "" Vector__XXX
+ SG_ VehicleSystem3 m3 : 49|7@1+ (1,0) [0|127] "" Vector__XXX
+ SG_ VehicleSystem2 m2 : 49|7@1+ (1,0) [0|127] "" Vector__XXX
+ SG_ VehicleSystem1 m1 : 49|7@1+ (1,0) [0|127] "" Vector__XXX
+
+BO_ 2565865513 ERC1_SA29: 8 Vector__XXX
+ SG_ SrcAddrssOfCtrllngDvcFrRtrdrCntr : 32|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ IntendedRetarderPercentTorque : 16|8@1+ (1,-125) [-125|125] "%" Vector__XXX
+ SG_ ActualRetarderPercentTorque : 8|8@1+ (1,-125) [-125|125] "%" Vector__XXX
+ SG_ RetarderTorqueMode : 0|4@1+ (1,0) [0|15] "" Vector__XXX
+
+BO_ 2565865728 EBC1_SA00: 8 Vector__XXX
+ SG_ EngRetarderSelection : 32|8@1+ (0.4,0) [0|100] "%" Vector__XXX
+
+BO_ 2565874688 A1SCRDSR1_SA00: 8 Vector__XXX
+ SG_ Aftrtratment1SCRSystemRqedState : 16|4@1+ (1,0) [0|15] "" Vector__XXX
+ SG_ Aftrtrtmnt1SCRRqdDsngRgntQntity : 0|16@1+ (0.3,0) [0|19276.5] "g/h" Vector__XXX
+
+BO_ 2566733312 A1SCREGT_SA00: 8 Vector__XXX
+ SG_ Aftrtrtmnt1SCRCtlystOtltGasTemp : 24|16@1+ (0.03125,-273) [-273|1734.96875] "deg C" Vector__XXX
+ SG_ Aftrtrtmnt1SCRCtlystIntkGasTemp : 0|16@1+ (0.03125,-273) [-273|1734.96875] "deg C" Vector__XXX
+
+BO_ 2566733824 A1SCRDSR2_SA00: 8 Vector__XXX
+ SG_ Aftrtrtmnt1SCRCtlystTnkHaterCmd : 16|8@1+ (0.4,0) [0|100] "%" Vector__XXX
+ SG_ Aftrtrtmnt1SCRCtlystRgntLnHter4 : 14|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ Aftrtrtmnt1SCRCtlystRgntLnHter3 : 12|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ Aftrtrtmnt1SCRCtlystRgntLnHter2 : 10|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ Aftrtrtmnt1SCRCtlystRgntLnHter1 : 8|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ Aftrtrtmnt1SCRDserHeatingModeRq : 4|3@1+ (1,0) [0|7] "" Vector__XXX
+
+BO_ 2566768128 CSA_SA00: 8 Vector__XXX
+ SG_ EngStartEnableDevice2Config : 12|4@1+ (1,0) [0|15] "" Vector__XXX
+ SG_ EngStartEnableDevice1Config : 8|4@1+ (1,0) [0|15] "" Vector__XXX
+ SG_ EngStartEnableDevice2 : 2|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ EngStartEnableDevice1 : 0|2@1+ (1,0) [0|3] "" Vector__XXX
+
+BO_ 2566776064 MVS_SA00: 8 Vector__XXX
+ SG_ AppliedVehicleSpeedLimit : 56|8@1+ (1,0) [0|250] "km/h" Vector__XXX
+ SG_ MaxVehicleSpeedLimit1 : 0|8@1+ (1,0) [0|250] "km/h" Vector__XXX
+
+BO_ 2566804992 AT1T1I_SA00: 8 Vector__XXX
+ SG_ Aftrtrtmnt1SCRCtalystTankHeater : 48|8@1+ (0.4,0) [0|100] "%" Vector__XXX
+ SG_ Aftrtrtmnt1DEFTnkLwLvlIndicator : 37|3@1+ (1,0) [0|7] "" Vector__XXX
+ SG_ Aftrtrtment1SCRCatalystTankTemp : 8|8@1+ (1,-40) [-40|210] "deg C" Vector__XXX
+ SG_ Aftrtrtmnt1SCRCatalystTankLevel : 0|8@1+ (0.4,0) [0|100] "%" Vector__XXX
+
+BO_ 2566831360 FD_SA00: 8 Vector__XXX
+ SG_ FanDriveState : 8|4@1+ (1,0) [0|15] "" Vector__XXX
+
+BO_ 2566832384 VDHR_SA00: 8 Vector__XXX
+ SG_ HighResolutionTripDistance : 32|32@1+ (0.005,0) [0|21055406] "km" Vector__XXX
+ SG_ HghRslutionTotalVehicleDistance : 0|32@1+ (0.005,0) [0|21055406] "km" Vector__XXX
+
+BO_ 2566832622 VDHR_SAEE: 8 Vector__XXX
+ SG_ HighResolutionTripDistance : 32|32@1+ (0.005,0) [0|21055406] "km" Vector__XXX
+ SG_ HghRslutionTotalVehicleDistance : 0|32@1+ (0.005,0) [0|21055406] "km" Vector__XXX
+
+BO_ 2566839040 EFL_P2_SA00: 8 Vector__XXX
+ SG_ EngInjectorMeteringRail1Press : 16|16@1+ (0.00390625,0) [0|251] "MPa" Vector__XXX
+
+BO_ 2566840064 EEC3_SA00: 8 Vector__XXX
+ SG_ EngsDsrdOprtngSpdAsymmtryAdjstmn : 24|8@1+ (1,0) [0|250] "" Vector__XXX
+ SG_ Aftertreatment1ExhaustDewPoint : 58|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ EngsDesiredOperatingSpeed : 8|16@1+ (0.125,0) [0|8031.875] "rpm" Vector__XXX
+ SG_ NominalFrictionPercentTorque : 0|8@1+ (1,-125) [-125|125] "%" Vector__XXX
+
+BO_ 2566840320 VD_SA00: 8 Vector__XXX
+ SG_ TotalVehicleDistance : 32|32@1+ (0.125,0) [0|526385151.9] "km" Vector__XXX
+ SG_ TripDistance : 0|32@1+ (0.125,0) [0|526385151.9] "km" Vector__XXX
+
+BO_ 2566841344 SHUTDN_SA00: 8 Vector__XXX
+ SG_ EngProtectionSystemConfig : 46|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ EngIdleShutdownTimerFunction : 14|2@1+ (1,0) [0|3] "" Vector__XXX
+
+BO_ 2566841600 HOURS_SA00: 8 Vector__XXX
+ SG_ EngTotalRevolutions : 32|32@1+ (1000,0) [0|4211081215000] "r" Vector__XXX
+ SG_ EngTotalHoursOfOperation : 0|32@1+ (0.05,0) [0|210554060.75] "hr" Vector__XXX
+
+BO_ 2566842094 TD_SAEE: 8 Vector__XXX
+ SG_ LocalHourOffset : 56|8@1+ (1,-125) [-125|125] "hr" Vector__XXX
+ SG_ LocalMinuteOffset : 48|8@1+ (1,-125) [-125|125] "mins" Vector__XXX
+ SG_ Year : 40|8@1+ (1,1985) [1985|2235] "years" Vector__XXX
+ SG_ Day : 32|8@1+ (0.25,0) [0|62.5] "days" Vector__XXX
+ SG_ Month : 24|8@1+ (1,0) [0|250] "months" Vector__XXX
+ SG_ Hours : 16|8@1+ (1,0) [0|250] "hr" Vector__XXX
+ SG_ Minutes : 8|8@1+ (1,0) [0|250] "mins" Vector__XXX
+ SG_ Seconds : 0|8@1+ (0.25,0) [0|62.5] "s" Vector__XXX
+
+BO_ 2566842624 LFC_SA00: 8 Vector__XXX
+ SG_ EngTotalFuelUsed : 32|32@1+ (0.5,0) [0|2105540607.5] "L" Vector__XXX
+ SG_ EngTripFuel : 0|32@1+ (0.5,0) [0|2105540607.5] "L" Vector__XXX
+
+BO_ 2566843904 ET1_SA00: 8 Vector__XXX
+ SG_ EngCoolantTemp : 0|8@1+ (1,-40) [-40|210] "deg C" Vector__XXX
+
+BO_ 2566844160 EFL_P1_SA00: 8 Vector__XXX
+ SG_ EngOilPress : 24|8@1+ (4,0) [0|1000] "kPa" Vector__XXX
+ SG_ EngFuelDeliveryPress : 0|8@1+ (4,0) [0|1000] "kPa" Vector__XXX
+
+BO_ 2566844183 EFL_P1_SA17: 8 Vector__XXX
+ SG_ EngCoolantLevel : 56|8@1+ (0.4,0) [0|100] "%" Vector__XXX
+
+BO_ 2566844672 CCVS_SA00: 8 Vector__XXX
+ SG_ PTOGovernorState : 48|5@1+ (1,0) [0|31] "" Vector__XXX
+ SG_ CruiseCtrlStates : 53|3@1+ (1,0) [0|7] "" Vector__XXX
+ SG_ CruiseCtrlSetSpeed : 40|8@1+ (1,0) [0|250] "km/h" Vector__XXX
+ SG_ CruiseCtrlAccelerateSwitch : 38|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ CruiseCtrlResumeSwitch : 36|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ CruiseCtrlCoastSwitch : 34|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ CruiseCtrlSetSwitch : 32|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ ClutchSwitch : 30|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ BrakeSwitch : 28|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ CruiseCtrlEnableSwitch : 26|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ CruiseCtrlActive : 24|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ WheelBasedVehicleSpeed : 8|16@1+ (0.00390625,0) [0|250.996] "km/h" Vector__XXX
+
+BO_ 2566844695 CCVS_SA17: 8 Vector__XXX
+ SG_ ParkingBrakeSwitch : 2|2@1+ (1,0) [0|3] "" Vector__XXX
+
+BO_ 2566844928 LFE_SA00: 8 Vector__XXX
+ SG_ EngAverageFuelEconomy : 32|16@1+ (0.001953125,0) [0|125.5] "km/L" Vector__XXX
+ SG_ EngInstantaneousFuelEconomy : 16|16@1+ (0.001953125,0) [0|125.5] "km/L" Vector__XXX
+ SG_ EngFuelRate : 0|16@1+ (0.05,0) [0|3212.75] "L/h" Vector__XXX
+
+BO_ 2566845696 AMB_SA00: 8 Vector__XXX
+ SG_ BarometricPress : 0|8@1+ (0.5,0) [0|125] "kPa" Vector__XXX
+
+BO_ 2566845952 IC1_SA00: 8 Vector__XXX
+ SG_ EngIntakeManifold1Temp : 16|8@1+ (1,-40) [-40|210] "deg C" Vector__XXX
+ SG_ EngIntakeManifold1Press : 8|8@1+ (2,0) [0|500] "kPa" Vector__XXX
+
+BO_ 2566846208 VEP1_SA00: 8 Vector__XXX
+ SG_ BatteryPotential_PowerInput1 : 32|16@1+ (0.05,0) [0|3212.75] "V" Vector__XXX
+
+BO_ 2566847511 DD_SA17: 8 Vector__XXX
+ SG_ FuelLevel1 : 8|8@1+ (0.4,0) [0|100] "%" Vector__XXX
+ SG_ EngOilFilterDiffPress : 24|8@1+ (0.5,0) [0|125] "kPa" Vector__XXX
+ SG_ EngFuelFilterDiffPress : 16|8@1+ (2,0) [0|500] "kPa" Vector__XXX
+
+BO_ 2566848256 WFI_SA00: 8 Vector__XXX
+ SG_ WaterInFuelIndicator : 0|2@1+ (1,0) [0|3] "" Vector__XXX
+
+BO_ 2631794711 RESET_DA00_SA17: 8 Vector__XXX
+ SG_ TripGroup1 : 0|2@1+ (1,0) [0|3] "" Vector__XXX
+
+BO_ 2631855639 RESET_DAEE_SA17: 8 Vector__XXX
+ SG_ TripGroup1 : 0|2@1+ (1,0) [0|3] "" Vector__XXX
+
+BO_ 2632515566 ACKM_DAFF_SAEE: 8 Vector__XXX
+ SG_ ControlByte M : 0|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ ParameterGroupNumber : 40|24@1+ (1,0) [0|16777215] "" Vector__XXX
+
+
+CM_ "Source-aware clones retain generic signal comments and enumerated value labels.";
+
+CM_ BO_ 2364539648 "Electronic Engine Controller 2";
+CM_ SG_ 2364539648 SCRThermalManagementActive "Indicates that the exhaust temperatures have been elevated for regeneration of the SCR aftertreatment system or in";
+VAL_ 2364539648 SCRThermalManagementActive 3 "DontCare" 2 "Reserved" 1 "SCRThermalManagementIsActive" 0 "SCRThermalManagementIsNotActive" ;
+CM_ SG_ 2364539648 ActlMxAvailableEngPercentTorque "This is the maximum amount of torque that the engine can immediately deliver as a percentage of the reference engine";
+CM_ SG_ 2364539648 EngPercentLoadAtCurrentSpeed "The ratio of actual engine percent torque (indicated) to maximum indicated torque available at the current engine speed,";
+CM_ SG_ 2364539648 RoadSpeedLimitStatus "Status (active or not active) of the system used to limit maximum vehicle velocity.";
+VAL_ 2364539648 RoadSpeedLimitStatus 3 "NotAvailable" 2 "Error" 1 "NotActive" 0 "Active" ;
+CM_ SG_ 2364539648 AccelPedalKickdownSwitch "Switch signal which indicates whether the accelerator pedal kickdown switch is opened or closed.";
+VAL_ 2364539648 AccelPedalKickdownSwitch 3 "NotAvailable" 2 "Error" 1 "KickdownActive" 0 "KickdownPassive" ;
+CM_ SG_ 2364539648 AccelPedal1LowIdleSwitch "Switch signal which indicates the state of the accelerator pedal 1 low idle switch.";
+VAL_ 2364539648 AccelPedal1LowIdleSwitch 3 "NotAvailable" 2 "Error" 1 "AccelPedal1InLowIdleCondition" 0 "AcclPedal1NotInLowIdleCondition" ;
+CM_ SG_ 2364539648 AccelPedalPos1 "The ratio of actual position of the analog engine speed/torque request input device (such as an accelerator pedal or";
+CM_ BO_ 2364539904 "Electronic Engine Controller 1";
+CM_ SG_ 2364539904 SrcAddrssOfCtrllngDvcFrEngCntrl "The source address of the SAE J1939 device currently controlling the engine.";
+CM_ SG_ 2364539904 ActlEngPrcntTrqueHighResolution "This parameter displays an additional torque in percent of the reference engine torque.";
+VAL_ 2364539904 ActlEngPrcntTrqueHighResolution 8 "1111NotAvailable" 7 "0875" 1 "0125" 0 "0000" ;
+CM_ SG_ 2364539904 EngDemandPercentTorque "The requested torque output of the engine by all dynamic internal inputs, including smoke control, noise control and low";
+CM_ SG_ 2364539904 EngSpeed "Actual engine speed which is calculated over a minimum crankshaft angle of 720 degrees divided by the number of cylinders.";
+CM_ SG_ 2364539904 ActualEngPercentTorque "The calculated output torque of the engine.";
+CM_ SG_ 2364539904 DriversDemandEngPercentTorque "The requested torque output of the engine by the driver.";
+CM_ SG_ 2364539904 EngTorqueMode "State signal which indicates which engine torque mode is currently generating, limiting, or controlling the torque.";
+VAL_ 2364539904 EngTorqueMode 15 "Not available" 11 "Remote accelerator" 10 "Braking system" 9 "High speed governor" 8 "Torque limiting" 7 "ABS control" 6 "Transmission control" 5 "ASR control" 4 "Road speed governor" 3 "PTO governor" 2 "Cruise control" 1 "Accelerator pedal/operator selec" 0 "Low idle governor/no request (de" ;
+CM_ BO_ 2364541440 "Engine Gas Flow Rate";
+CM_ SG_ 2364541440 EngIntakeAirMassFlowRate "Mass flow rate of fresh air entering the engine air intake, before any EGR mixer, if used.";
+CM_ BO_ 2365394770 "Aftertreatment 1 Outlet Gas NOx Sensor correction data";
+CM_ SG_ 2365394770 Aftrtrtmnt1OtltGsNOxSnsrNwPrtDvt "New part deviation NOx_Offset to correct (recalculate) sensor signal on the Engine ECU side.";
+CM_ SG_ 2365394770 Aftrtrtmnt1OtltGsNOxSnsrNwP_0000 "New part deviation NOx_Gain to correct (recalculate) sensor signal on the Engine ECU side.";
+CM_ SG_ 2365394770 Aftrtrtmnt1OtltGsNOxSnsrHtrRtio "Heater ratio to determine temperature at sensor tip.";
+CM_ BO_ 2365484270 "Tachograph";
+CM_ SG_ 2365484270 VehicleOverspeed "Indicates whether the vehicle is exceeding the legal speed limit set in the tachograph.";
+VAL_ 2365484270 VehicleOverspeed 3 "NotAvailable" 2 "Error" 1 "Overspeed" 0 "NoOverspeed" ;
+CM_ SG_ 2365484270 VehicleMotion "Indicates whether motion of the vehicle is detected or not.";
+VAL_ 2365484270 VehicleMotion 3 "NotAvailable" 2 "Error" 1 "VehicleMotionDetected" 0 "VehicleMotionNotDetected" ;
+CM_ SG_ 2365484270 TachographVehicleSpeed "Speed of the vehicle registered by the tachograph.";
+CM_ SG_ 2365484270 TachographOutputShaftSpeed "Calculated speed of the transmission output shaft.";
+CM_ SG_ 2365484270 TachographPerformance "Indicates the tachograph performance; including electronic or mechanical analysis, instrument analysis, speed sensor";
+VAL_ 2365484270 TachographPerformance 3 "NotAvailable" 2 "Error" 1 "PerformanceAnalysis" 0 "NormalPerformance" ;
+CM_ SG_ 2365484270 SystemEvent "Indicates that a tachograph event has occurred.";
+VAL_ 2365484270 SystemEvent 3 "NotAvailable" 2 "Error" 1 "TachographEvent" 0 "NoTachographEvent" ;
+CM_ SG_ 2365484270 DriverCardDriver1 "Indicates the presence of a driver card";
+VAL_ 2365484270 DriverCardDriver1 3 "NotAvailable" 2 "Error" 1 "DriverCardPresent" 0 "DriverCardNotPresent" ;
+CM_ SG_ 2365484270 Driver2WorkingState "State of work of the driver.";
+VAL_ 2365484270 Driver2WorkingState 7 "NotAvailable" 6 "Error" 4 "101Reserved" 3 "DriveBehindWheel" 2 "WrkLdngUnldingWorkingInAnOffice" 1 "DriverAvailableShortBreak" 0 "RestSleeping" ;
+CM_ SG_ 2365484270 Driver1WorkingState "State of work of the driver.";
+VAL_ 2365484270 Driver1WorkingState 7 "NotAvailable" 6 "Error" 4 "101Reserved" 3 "DriveBehindWheel" 2 "WrkLdngUnldingWorkingInAnOffice" 1 "DriverAvailableShortBreak" 0 "RestSleeping" ;
+CM_ BO_ 2432498944 "Electronic Engine Controller 9";
+CM_ SG_ 2432498944 CmdedEngFuelRailPress "Provides the commanded set point value for the engine fuel rail pressure";
+CM_ BO_ 2564882176 "Cab Message 1";
+CM_ SG_ 2564882176 RqedPercentFanSpeed "Fan speed as a ratio of the actual fan drive (current speed) to the fully engaged fan drive (maximum fan speed).";
+CM_ BO_ 2565406464 "Acknowledgment Message";
+VAL_ 2565406464 ControlByte 3 "CannotRespond" 2 "AccessDenied" 1 "NACK" 0 "ACK" ;
+CM_ SG_ 2565406464 ParameterGroupNumber "PGN which is requested by Request2 message";
+CM_ BO_ 2565472289 "Request";
+CM_ SG_ 2565472289 ParameterGroupNumber "PGN which is requested by Request2 message";
+CM_ BO_ 2565537536 "Request";
+CM_ SG_ 2565537536 ParameterGroupNumber "PGN which is requested by Request2 message";
+CM_ BO_ 2565537790 "Request";
+CM_ SG_ 2565537790 ParameterGroupNumber "PGN which is requested by Request2 message";
+CM_ BO_ 2565603072 "Transport Protocol - Data Transfer";
+CM_ BO_ 2565603113 "Transport Protocol - Data Transfer";
+CM_ BO_ 2565668608 "Transport Protocol - Connection Management";
+CM_ SG_ 2565668608 TotalNumberOfPacketsEoMA "Total number of packets for BAM message.Total number of packets received for RTS/CTS message.Total number of packets for RTS/CTS message.";
+CM_ SG_ 2565668608 TotalMessageSizeEoMA "Total message size (in bytes) for BAM message.Total message size (in bytes) for RTS/CTS message.Total message size (in bytes) for RTS/CTS message.";
+CM_ SG_ 2565668608 TotalMessageSizeBAM "Total message size (in bytes) for BAM message.Total message size (in bytes) for RTS/CTS message.Total message size (in bytes) for RTS/CTS message.";
+CM_ SG_ 2565668608 TotalNumberOfPacketsBAM "Total number of packets for BAM message.Total number of packets received for RTS/CTS message.Total number of packets for RTS/CTS message.";
+CM_ SG_ 2565668608 ConnectionAbortReason "Reason for connection abort message.";
+CM_ SG_ 2565668608 NextPacketNumberToBeSent "Next Packet Number to be sent (TP.CM_CTS)";
+CM_ SG_ 2565668608 NumberOfPacketsThatCanBeSent "Number of Packets that can be sent (TP.CM_CTS)";
+VAL_ 2565668608 PGNumber 255 "NotAvailable" ;
+CM_ SG_ 2565668608 TotalNumberOfPackets "Total number of packets for BAM message.Total number of packets received for RTS/CTS message.Total number of packets for RTS/CTS message.";
+CM_ SG_ 2565668608 TotalMessageSize "Total message size (in bytes) for BAM message.Total message size (in bytes) for RTS/CTS message.Total message size (in bytes) for RTS/CTS message.";
+VAL_ 2565668608 ControlByte 24 "EAbort" 23 "EEoMACK" 22 "EDPO" 21 "ECTS" 20 "ERTS" 255 "Abort" 32 "BAM" 19 "EoMA" 17 "CTS" 16 "RTS" ;
+CM_ BO_ 2565668649 "Transport Protocol - Connection Management";
+CM_ SG_ 2565668649 TotalNumberOfPacketsEoMA "Total number of packets for BAM message.Total number of packets received for RTS/CTS message.Total number of packets for RTS/CTS message.";
+CM_ SG_ 2565668649 TotalMessageSizeEoMA "Total message size (in bytes) for BAM message.Total message size (in bytes) for RTS/CTS message.Total message size (in bytes) for RTS/CTS message.";
+CM_ SG_ 2565668649 TotalMessageSizeBAM "Total message size (in bytes) for BAM message.Total message size (in bytes) for RTS/CTS message.Total message size (in bytes) for RTS/CTS message.";
+CM_ SG_ 2565668649 TotalNumberOfPacketsBAM "Total number of packets for BAM message.Total number of packets received for RTS/CTS message.Total number of packets for RTS/CTS message.";
+CM_ SG_ 2565668649 ConnectionAbortReason "Reason for connection abort message.";
+CM_ SG_ 2565668649 NextPacketNumberToBeSent "Next Packet Number to be sent (TP.CM_CTS)";
+CM_ SG_ 2565668649 NumberOfPacketsThatCanBeSent "Number of Packets that can be sent (TP.CM_CTS)";
+VAL_ 2565668649 PGNumber 255 "NotAvailable" ;
+CM_ SG_ 2565668649 TotalNumberOfPackets "Total number of packets for BAM message.Total number of packets received for RTS/CTS message.Total number of packets for RTS/CTS message.";
+CM_ SG_ 2565668649 TotalMessageSize "Total message size (in bytes) for BAM message.Total message size (in bytes) for RTS/CTS message.Total message size (in bytes) for RTS/CTS message.";
+VAL_ 2565668649 ControlByte 24 "EAbort" 23 "EEoMACK" 22 "EDPO" 21 "ECTS" 20 "ERTS" 255 "Abort" 32 "BAM" 19 "EoMA" 17 "CTS" 16 "RTS" ;
+CM_ BO_ 2565799680 "Address Claimed";
+CM_ SG_ 2565799680 IndustryGroup "0 = Global; 
+   1  = On-Highway; 
+   2  = Agricultural and Forestry; 
+   3  = Construction; 
+   4  = Marine;
+   5  = Industrial - Process
+          Control - Stationary (Gen-Sets)
+   6  = Reserve for SAE
+   7  = Reserve for SAE";
+VAL_ 2565799680 IndustryGroup 6 "Reserved for SAE" 7 "Reserved for SAE" 5 "IndustrialProcessCtrlStationary" 4 "Marine" 3 "Construction" 2 "Agricultural and Forestry" 1 "On-Highway" 0 "Global" ;
+VAL_ 2565799680 Function 127 "Reserved" 126 "Reserved" 125 "Reserved" 124 "Reserved" 123 "Reserved" 122 "Reserved" 121 "Reserved" 120 "Reserved" 119 "Reserved" 118 "Reserved" 117 "Reserved" 116 "Reserved" 115 "Reserved" 114 "Reserved" 113 "Reserved" 112 "Reserved" 111 "Reserved" 110 "Reserved" 109 "Reserved" 108 "Reserved" 107 "Reserved" 106 "Reserved" 105 "Reserved" 104 "Reserved" 103 "Reserved" 102 "Reserved" 101 "Reserved" 42 "Water Pump Control" 41 "Lighting - Operator Controls" 40 "Seat Control" 39 "Ignition Control Module" 38 "Tire Pressure Control" 37 "Cab Controller" 36 "Pneumatic - System Controller" 35 "Suspension - System Controller" 34 "Hydraulic Pump Controller" 33 "System Monitor" 32 "Headway Controller" 31 "Propulsion Battery Charger" 30 "Management Computer" 29 "Virtual Terminal (In Cab)" 28 "Off Vehicle Gateway" 27 "Power TakeOff (Secondary or Front)" 26 "Body Controller" 25 "Network Interconnect ECU" 24 "Vehicle Security" 23 "Vehicle Navigation" 22 "Aerodynamic Control" 21 "Cab Climate Control" 20 "Trip Recorder" 19 "Instrument Cluster" 18 "Suspension - Drive Axle" 17 "Suspension - Steer Axle" 16 "Steering Controller" 15 "Fuel System" 14 "Cruise Control" 13 "Retarder - Driveline" 12 "Retarder - Engine" 11 "Brakes - Drive Axle" 10 "Brakes - Steer Axle" 9 "Brakes - System Controller" 8 "Axle - Drive" 7 "Axle - Steering" 6 "Power TakeOff - (Main or Rear)" 5 "Shift Control/Console" 4 "Battery Pack Monitor" 3 "Transmission" 2 "Electric Propulsion Control" 1 "Auxiliary Power Unit (APU)" 0 "Engine" 100 "Reserved" 99 "Reserved" 98 "Reserved" 97 "Reserved" 96 "Reserved" 95 "Reserved" 94 "Reserved" 93 "Reserved" 92 "Reserved" 91 "Reserved" 90 "Reserved" 89 "Reserved" 88 "Reserved" 87 "Reserved" 86 "Reserved" 85 "Reserved" 84 "Reserved" 83 "Reserved" 82 "Reserved" 81 "Reserved" 80 "Reserved" 79 "Reserved" 78 "Reserved" 77 "Reserved" 76 "Reserved" 75 "Reserved" 74 "Reserved" 73 "Reserved" 72 "Coolant Valve Controller" 71 "Transfer Case Control" 70 "Auxiliary Regeneration Device" 69 "Engine Emission Aftertreatement System" 68 "Aftertreatment system gas measurement" 67 "Electrical System Controller" 66 "I/O Controller" 65 "Gas Flow Measurement" 64 "Endurance Braking" 63 "Engine Valve Controller" 62 "On-Board Diagnostic Unit" 61 "File Server/Printer" 60 "Cab Display" 59 "Starter" 58 "Fan Drive Control" 57 "Steering Column Unit" 56 "Communications Unit, Radio" 55 "Communications Unit, Satellite" 54 "Communications Unit, Cellular" 53 "Alternator/Charging System" 52 "Chassis Controller" 51 "Forward-Looking Collision Warning System" 50 "Auxiliary Heater" 49 "Clutch/Converter Control" 48 "Ramp Control" 47 "Information System Controller" 46 "Oil Sensor Unit" 45 "Vehicle Dynamic Stability Control" 44 "Exhaust Emission Control" 43 "Transmission Display" ;
+CM_ SG_ 2565799680 ManufacturerCode "Assigned by NMEA 2000 Committee";
+VAL_ 2565799680 ManufacturerCode 252 "Sensor-Technik Wiedemann GmbH" 251 "German Agricultural Society" 250 "Kuhn Group" 249 "Schaltbau GmbH" 233 "Yacht Monitoring Solutions Inc." 232 "TSD Integrated Controls" 1863 "Thomas G. Faria Co." 1862 "Sanshin" 1861 "Vector CANtech" 1860 "MMP" 1859 "Kvasar AB" 1858 "Litton" 1857 "Simrad" 1856 "Trimble" 1855 "Furuno USA" 1854 "Northstar Technologies" 1853 "Japan Radio Co." 1852 "Navionics" 1851 "Raymarine" 1850 "Teleflex" 222 "Generac Power Systems, Inc." 221 "SiE" 220 "Beede Electrical Instrument Company, Inc." 219 "Cat OEM Solutions" 218 "Gits Manufacturing Company" 217 "RM Michaelides Software & Elektronik GmbH" 216 "Paneltronics Inc." 215 "Aetna Engineering/Fireboy-Xintex" 214 "MC elettronica Srl" 213 "CNH Belgium N.V." 212 "Sure Power Industries, Inc." 211 "DNA Group" 210 "Iteris, Inc." 209 "Bell Equip. Co. SA (PTY) LTD" 208 "Drew Technologies, Inc." 207 "Otto Engineering" 206 "port GmbH" 205 "SmarTire Systems Inc" 204 "The Morey Corporation" 203 "MILtronik GmbH" 202 "Curtis Instruments, Inc." 201 "Disenos y Tecnologia S.A." 200 "MGM Brakes" 199 "Actia Corp." 198 "Mystic Valley Communications" 197 "Mechron Power Systems" 196 "LEMKEN GmbH & Co. KG" 195 "General Engine Products" 194 "TriMark Corporation" 193 "Jeppesen Marine" 192 "Floscan" 191 "XATA Corporation" 190 "Hella KGaA Hueck & Co." 189 "QUALCOMM" 188 "EMP Corp." 187 "Air-Weigh" 186 "Altronic, Inc." 185 "Beede Electrical Instrument Company" 184 "EIA Electronics" 183 "KDS Controls, Inc." 182 "Vehicle Systems Engineering B.V." 181 "Coretronics, Inc." 180 "Smart Power Systems" 179 "TeeJet Technologies Denmark" 178 "Siemens VDO Automotive AG" 177 "Diagnostic System Associates" 176 "Moritz Aerospace" 175 "Veris Technologies, Inc." 174 "AB Volvo Penta" 173 "Ryeso, Inc." 172 "Yanmar Marine USA" 171 "Wachendorff Elektronik GmbH & Co. KG" 170 "Computronics Corporation Ltd." 169 "Marlin Technologies Inc." 168 "Xantrex" 167 "JLG Industries Inc." 166 "Phoenix International" 165 "CPAC Systems AB" 164 "DaimlerChrysler Off-Highway" 163 "BRP Inc." 162 "Axiomatic Technologies" 161 "Offshore Systems (UK) Limited" 160 "Nido" 159 "NTech Industries Inc." 158 "Firestone Industrial Products Company" 157 "ISSPRO Inc." 156 "ITT Industries - Cannon" 155 "Vetronix Corporation" 154 "Westerbeke Corporation" 153 "Woodward, Industrial Controls Division" 152 "Elobau Elektrobauelemente GmbH & Co. KG" 151 "Raven Industries Inc. - Flow Controls Division" 150 "Fleetguard" 149 "Holset" 148 "Blue Water Data, Inc." 147 "Nautibus Electronic GmbH" 146 "Maxima Technologies" 145 "MurCal Controls" 144 "Mercury Marine" 143 "W. Gmeiner GmbH & Co." 142 "TRW Automotive (Commercial Steering Systems)" 141 "Thales Navigation Ltd." 140 "Lowrance Electronics, Inc." 139 "Caterpillar Trimble Control Technologies (CTCT), LLC" 138 "Georg Fritzmeier GmbH & Co. KG" 137 "Maretron" 136 "Komatsu Ltd." 135 "Airmar Technology Corporation" 134 "Iris Technology Ltd." 133 "Bucher Schoerling GmbH" 132 "Mulag-Fahrzeugwerk" 131 "ITT Industries" 130 "Nido - Universal Machines B.V." 129 "OMNEX Control Systems, Inc." 128 "Gerhard Duecker GmbH & Co. KG" 127 "Holland USA" 126 "Driver Tech" 125 "Nevada Automotive Test Center" 124 "Hydac Electronic" 123 "Basler Electric" 122 "FG Wilson (Engineering) Limited" 121 "HED (Hydro Electronic Devices, Inc.)" 120 "RDS Technology Ltd." 119 "IntegriNautics" 118 "Intron GmbH" 117 "HUSCO International" 116 "BEELINE Technologies" 115 "NACCO Materials Handling Group, Inc." 114 "EControls, Inc." 113 "Stress-Tek, Inc." 112 "MECALAC" 111 "Maschinenfabrik Bernhard Krone GmbH" 110 "EPIQ Sensor-Nite" 109 "TeeJet Technologies Denmark" 108 "WTK-Elecktronik GmbH" 107 "Grimme Landmaschinen GmbH & Co. KG" 106 "BAE Systems Controls, Inc." 105 "Kiepe Elektrik GmbH & Co. KG" 104 "Claas Selbstfahrende Erntemaschinen GmbH" 103 "Agrocom GmbH & Co. Agrarsystem KG" 102 "AGCO GmbH & Co." 101 "Sensoria" 100 "VDO Technik AG" 99 "International Transmissions Ltd (ITL)" 98 "Mueller-Elektronik GmbH & Co." 97 "Ag Leader Technology, Inc." 96 "Mech@tronic IT GmbH" 95 "Pacific Insight Electronics Corp." 94 "CNH Global N.V." 93 "Perkins Engines Company Ltd." 92 "Ag-Chem Equipment Co., Inc." 91 "BSG Bodensee Steuergeraete GmbH" 90 "Knorr-Bremse SfN GmbH" 89 "Kverneland Group, Electronics Division" 88 "Satloc Precision GPS" 87 "J.C. Bamford Excavators Ltd (JCB)" 86 "C.E. Niehoff & Company" 85 "Kohler Co." 84 "New Holland UK Limited" 83 "Eaton VORAD Technologies" 82 "Bobcat/Ingersoll-Rand" 81 "Fire Research Corp" 80 "Twin Disc, Inc." 79 "Daimler Benz AG - Engine Division (PBM)" 78 "Frank W. Murphy Manufacturing, Inc." 77 "Deere Power Systems Group" 76 "unused" 75 "Deere & Co. Agricultural Division" 74 "Eaton Axle-Brake Division" 73 "LeTourneau, Inc." 72 "Sisu Corporation" 71 "Vansco Electronics Ltd." 70 "Flex-Coil Limited" 69 "Trimble Navigation" 68 "Scania" 67 "Funk Manufacturing Company" 66 "John Deere Construction Equipment Division" 65 "MAN Nutzfahrzeuge AG" 64 "unused" 63 "ZF Industries Inc." 62 "Wabco" 61 "Volvo Truck Corp." 60 "Volvo Trucks North America Inc." 59 "VES Inc." 58 "SPX Corporation, OTC Division" 57 "Sauer-Danfoss Co." 56 "SAIC" 55 "Ryder System Inc." 54 "Meritor Wabco" 53 "Continental Automotive Systems US, Inc." 52 "Meritor Automotive, Inc." 51 "Robert Bosch GmbH" 50 "Robert Bosch Corp" 49 "RE America Inc." 48 "Pollak Alphabet" 47 "Phillips Semiconductor" 46 "Parasoft Computing Solutions" 45 "PACCAR" 44 "Nippondenso Co. Ltd." 43 "International Truck and Engine Corp. Vehicle Electronics" 42 "International Truck and Engine Corp. Engine Electronics" 41 "Motorola Inc." 40 "Motorola AIEG Inc." 39 "Microfirm Inc." 38 "Micro Processor Systems Inc." 37 "Mack Trucks Inc." 36 "Lucas Ltd." 35 "Kenworth Truck Co." 34 "Kelsey Hayes Co." 33 "John Deere" 32 "Jacobs Vehicle Systems" 31 "J Pollak Corp." 30 "Isuzu Motors Ltd." 29 "Hino Motors Ltd." 28 "Grote Ind. Inc." 27 "GMC" 26 "General Motors Corp., Service Technology Group" 25 "Daimler Trucks North America LLC" 24 "Ford Motor Co., Vehicle Controls" 23 "Ford Motor Co., Heavy Truck" 22 "Ford Motor Co., Electronic Concepts $ Systems" 21 "Echilin Inc., Midland Brake Inc." 20 "Eaton Ltd" 19 "Eaton Corp. Trucking Info Services" 18 "Eaton Corp, Transmission Division" 17 "Eaton Corp. Res & Dev" 16 "Eaton Corp." 15 "Dickey-John Corp." 14 "Detroit Diesel Corporation" 13 "Delco Electronics" 12 "Deere & Company, Precision Farming" 11 "Dearborn Group Inc." 10 "Cummins Engine Co." 9 "Chrysler Corp." 8 "Caterpillar Inc." 7 "Case Corp." 6 "Berifors Electronics AB" 5 "AMP Inc." 4 "Ametek-Dixson" 3 "Ametek, US Gauge Division" 2 "Allison Transmission, GMC" 1 "Allied Signal Inc." 0 "Reserved" 231 "Topcon Positioning Systems, Inc." 230 "Saucon Technologies" 229 "Garmin International Inc." 228 "ZF Marine Electronics" 227 "Lykketronic A/S" 226 "Monaco Coach Corporation" 225 "SKF" 224 "EMMI Network, S.L." 223 "Vaueo Retarder Co., Ltd." 263 "IMMI" 262 "HydraForce, Inc" 261 "Red Dot Corporation" 260 "Reichhardt GmbH" 259 "Jetter AG" 258 "ARAG" 257 "Honda Motor Co., Ltd" 256 "Tyco Electronics AMP" 255 "MEAS France" 254 "GE Sensing" 253 "Mobile Control Systems" 298 "Holley Performance" 297 "Zonar Systems Inc" 296 "micro dynamics GmbH" 295 "BEP Marine" 294 "Grayhill Inc." 293 "Spyder Controls Corp." 292 "IKUSI - Angel Iglesias S.A." 291 "Groeneveld Transport Efficiency BV" 290 "Kuebler GmbH" 289 "Watlow" 288 "Mitsubishi FUSO Truck & Bus Corp." 287 "NTech Industries, Inc" 286 "Coelmo srl" 285 "Sea Recovery Corp" 284 "Mobile Tech Chile" 283 "CWF Hamilton & Co Ltd" 282 "Medallion Instrumentation Systems" 281 "Precision Governors LLC" 311 "Patrick Power Products" 310 "TECNORD srl" 309 "Krauss-Maffei Wegmann GmbH & Co. KG" 308 "Cyntrx" 307 "MAS Technologies" 306 "Sleipner Motor AB" 305 "NovAtel Inc" 304 "EmpirBus AB" 303 "CTS Corporation" 302 "Nissin Kogyo Co., LTD" 301 "Parker Hannifin (UK) Ltd FDE group" 300 "Systron Donner Automotive" 299 "Rauch Landmaschinen GmbH" 280 "Leica Geosystems Pty Ltd" 279 "Geometris LP" 278 "Takata Electronics" 277 "LHP Telematics" 276 "Aqua-Hot Heating Systems" 275 "Navico Egersund AS" 274 "LTW Technology Co., LTD" 273 "Active Research Limited" 272 "Gross Mechanical Laboratories, Inc" 327 "Sonceboz SA" 326 "Akron Brass Company" 325 "ASM Automation Sensorik Messtechnik GmbH" 324 "Snap-on Diagnostics" 323 "Mobileye Vision Technologies Ltd." 322 "MICHENKA s.r.o." 321 "Ultra Electronics, Electrics" 320 "Miedema Landbouwwerktuigenfabriek B.V." 319 "Cadec Global" 318 "SAT Plan" 317 "Navtronics Bvba" 316 "ITT Flow Control" 315 "Icom Incorporated" 314 "CSM GmbH" 313 "Ilmor Engineering, Inc" 312 "Lectronix, Inc." 271 "Cole Hersee" 270 "Tennant" 269 "Saft America Inc.,  Space & Defense Division" 268 "Accurate Technologies" 267 "Red Lion Controls, Inc" 266 "International Thermal Research Ltd" 265 "MTS Sensor Technologie GmbH" 264 "Autolync" 248 "Cooper Standard Automotive Active Systems Group" 247 "ePULSE" 246 "Class 1, Inc" 245 "Capstan Ag Systems, Inc." 244 "Techno-Matic" 243 "eRide, Inc." 242 "Kokusandenki Co. Ltd" 241 "Schneider Automation SAS " 240 "Vanair Mfg" 239 "May & Scofield Ltd" 238 "ZF Friedrichshafen AG" 237 "Agtron Enterprises Inc" 236 "Norac Systems International Inc" 235 "SailorMade Marine Telemetry - Tetra Technology Ltd." 234 "Mondial electronic GmbH" ;
+VAL_ 2565799680 VehicleSystem 0 "Non-specific System" 127 "Not Available" ;
+VAL_ 2565799680 VehicleSystem5 127 "Not Available" 0 "Ind. Process Control Stationary" ;
+VAL_ 2565799680 VehicleSystem4 100 "Deck/Cargo/Fishing equip. sys" 90 "Environmental (HVAC) Systems" 80 "Instrumentation/General Systems" 70 "Communications Systems" 60 "Navigation Systems" 50 "Propulsion Systems" 40 "Steering Systems" 30 "Power Mgmt and lighting systems" 25 "Gateway" 20 "Safety Systems" 10 "System Tools" 127 "Not Available" 0 "Non-specific System" ;
+VAL_ 2565799680 VehicleSystem3 8 "Grader" 7 "Four Wheel Drive Loader" 6 "Forklift" 5 "Excavator" 4 "Crawler" 3 "Backhoe" 2 "Articulated Dump Truck" 1 "Skid Steer Loader" 127 "Not Available" 0 "Non-specific System" ;
+VAL_ 2565799680 VehicleSystem2 16 "Skidder" 15 "Earth Work" 14 "Special Crops" 13 "Powered Auxiliary Device" 12 "Farm Yard Operations" 11 "Transport/Trailer" 10 "Irrigation" 9 "Forage" 8 "Root Harvesters" 7 "Harvesters" 6 "Sprayers" 5 "Fertilizers" 4 "Planters/Seeders" 3 "Secondary Tillage" 2 "Tillage" 1 "Tractor" 127 "Not Available" 0 "Non-specific System" ;
+VAL_ 2565799680 VehicleSystem1 2 "Trailer" 1 "Tractor" 127 "Not Available" 0 "Non-specific System" ;
+CM_ BO_ 2565799721 "Address Claimed";
+CM_ SG_ 2565799721 IndustryGroup "0 = Global; 
+   1  = On-Highway; 
+   2  = Agricultural and Forestry; 
+   3  = Construction; 
+   4  = Marine;
+   5  = Industrial - Process
+          Control - Stationary (Gen-Sets)
+   6  = Reserve for SAE
+   7  = Reserve for SAE";
+VAL_ 2565799721 IndustryGroup 6 "Reserved for SAE" 7 "Reserved for SAE" 5 "IndustrialProcessCtrlStationary" 4 "Marine" 3 "Construction" 2 "Agricultural and Forestry" 1 "On-Highway" 0 "Global" ;
+VAL_ 2565799721 Function 127 "Reserved" 126 "Reserved" 125 "Reserved" 124 "Reserved" 123 "Reserved" 122 "Reserved" 121 "Reserved" 120 "Reserved" 119 "Reserved" 118 "Reserved" 117 "Reserved" 116 "Reserved" 115 "Reserved" 114 "Reserved" 113 "Reserved" 112 "Reserved" 111 "Reserved" 110 "Reserved" 109 "Reserved" 108 "Reserved" 107 "Reserved" 106 "Reserved" 105 "Reserved" 104 "Reserved" 103 "Reserved" 102 "Reserved" 101 "Reserved" 42 "Water Pump Control" 41 "Lighting - Operator Controls" 40 "Seat Control" 39 "Ignition Control Module" 38 "Tire Pressure Control" 37 "Cab Controller" 36 "Pneumatic - System Controller" 35 "Suspension - System Controller" 34 "Hydraulic Pump Controller" 33 "System Monitor" 32 "Headway Controller" 31 "Propulsion Battery Charger" 30 "Management Computer" 29 "Virtual Terminal (In Cab)" 28 "Off Vehicle Gateway" 27 "Power TakeOff (Secondary or Front)" 26 "Body Controller" 25 "Network Interconnect ECU" 24 "Vehicle Security" 23 "Vehicle Navigation" 22 "Aerodynamic Control" 21 "Cab Climate Control" 20 "Trip Recorder" 19 "Instrument Cluster" 18 "Suspension - Drive Axle" 17 "Suspension - Steer Axle" 16 "Steering Controller" 15 "Fuel System" 14 "Cruise Control" 13 "Retarder - Driveline" 12 "Retarder - Engine" 11 "Brakes - Drive Axle" 10 "Brakes - Steer Axle" 9 "Brakes - System Controller" 8 "Axle - Drive" 7 "Axle - Steering" 6 "Power TakeOff - (Main or Rear)" 5 "Shift Control/Console" 4 "Battery Pack Monitor" 3 "Transmission" 2 "Electric Propulsion Control" 1 "Auxiliary Power Unit (APU)" 0 "Engine" 100 "Reserved" 99 "Reserved" 98 "Reserved" 97 "Reserved" 96 "Reserved" 95 "Reserved" 94 "Reserved" 93 "Reserved" 92 "Reserved" 91 "Reserved" 90 "Reserved" 89 "Reserved" 88 "Reserved" 87 "Reserved" 86 "Reserved" 85 "Reserved" 84 "Reserved" 83 "Reserved" 82 "Reserved" 81 "Reserved" 80 "Reserved" 79 "Reserved" 78 "Reserved" 77 "Reserved" 76 "Reserved" 75 "Reserved" 74 "Reserved" 73 "Reserved" 72 "Coolant Valve Controller" 71 "Transfer Case Control" 70 "Auxiliary Regeneration Device" 69 "Engine Emission Aftertreatement System" 68 "Aftertreatment system gas measurement" 67 "Electrical System Controller" 66 "I/O Controller" 65 "Gas Flow Measurement" 64 "Endurance Braking" 63 "Engine Valve Controller" 62 "On-Board Diagnostic Unit" 61 "File Server/Printer" 60 "Cab Display" 59 "Starter" 58 "Fan Drive Control" 57 "Steering Column Unit" 56 "Communications Unit, Radio" 55 "Communications Unit, Satellite" 54 "Communications Unit, Cellular" 53 "Alternator/Charging System" 52 "Chassis Controller" 51 "Forward-Looking Collision Warning System" 50 "Auxiliary Heater" 49 "Clutch/Converter Control" 48 "Ramp Control" 47 "Information System Controller" 46 "Oil Sensor Unit" 45 "Vehicle Dynamic Stability Control" 44 "Exhaust Emission Control" 43 "Transmission Display" ;
+CM_ SG_ 2565799721 ManufacturerCode "Assigned by NMEA 2000 Committee";
+VAL_ 2565799721 ManufacturerCode 252 "Sensor-Technik Wiedemann GmbH" 251 "German Agricultural Society" 250 "Kuhn Group" 249 "Schaltbau GmbH" 233 "Yacht Monitoring Solutions Inc." 232 "TSD Integrated Controls" 1863 "Thomas G. Faria Co." 1862 "Sanshin" 1861 "Vector CANtech" 1860 "MMP" 1859 "Kvasar AB" 1858 "Litton" 1857 "Simrad" 1856 "Trimble" 1855 "Furuno USA" 1854 "Northstar Technologies" 1853 "Japan Radio Co." 1852 "Navionics" 1851 "Raymarine" 1850 "Teleflex" 222 "Generac Power Systems, Inc." 221 "SiE" 220 "Beede Electrical Instrument Company, Inc." 219 "Cat OEM Solutions" 218 "Gits Manufacturing Company" 217 "RM Michaelides Software & Elektronik GmbH" 216 "Paneltronics Inc." 215 "Aetna Engineering/Fireboy-Xintex" 214 "MC elettronica Srl" 213 "CNH Belgium N.V." 212 "Sure Power Industries, Inc." 211 "DNA Group" 210 "Iteris, Inc." 209 "Bell Equip. Co. SA (PTY) LTD" 208 "Drew Technologies, Inc." 207 "Otto Engineering" 206 "port GmbH" 205 "SmarTire Systems Inc" 204 "The Morey Corporation" 203 "MILtronik GmbH" 202 "Curtis Instruments, Inc." 201 "Disenos y Tecnologia S.A." 200 "MGM Brakes" 199 "Actia Corp." 198 "Mystic Valley Communications" 197 "Mechron Power Systems" 196 "LEMKEN GmbH & Co. KG" 195 "General Engine Products" 194 "TriMark Corporation" 193 "Jeppesen Marine" 192 "Floscan" 191 "XATA Corporation" 190 "Hella KGaA Hueck & Co." 189 "QUALCOMM" 188 "EMP Corp." 187 "Air-Weigh" 186 "Altronic, Inc." 185 "Beede Electrical Instrument Company" 184 "EIA Electronics" 183 "KDS Controls, Inc." 182 "Vehicle Systems Engineering B.V." 181 "Coretronics, Inc." 180 "Smart Power Systems" 179 "TeeJet Technologies Denmark" 178 "Siemens VDO Automotive AG" 177 "Diagnostic System Associates" 176 "Moritz Aerospace" 175 "Veris Technologies, Inc." 174 "AB Volvo Penta" 173 "Ryeso, Inc." 172 "Yanmar Marine USA" 171 "Wachendorff Elektronik GmbH & Co. KG" 170 "Computronics Corporation Ltd." 169 "Marlin Technologies Inc." 168 "Xantrex" 167 "JLG Industries Inc." 166 "Phoenix International" 165 "CPAC Systems AB" 164 "DaimlerChrysler Off-Highway" 163 "BRP Inc." 162 "Axiomatic Technologies" 161 "Offshore Systems (UK) Limited" 160 "Nido" 159 "NTech Industries Inc." 158 "Firestone Industrial Products Company" 157 "ISSPRO Inc." 156 "ITT Industries - Cannon" 155 "Vetronix Corporation" 154 "Westerbeke Corporation" 153 "Woodward, Industrial Controls Division" 152 "Elobau Elektrobauelemente GmbH & Co. KG" 151 "Raven Industries Inc. - Flow Controls Division" 150 "Fleetguard" 149 "Holset" 148 "Blue Water Data, Inc." 147 "Nautibus Electronic GmbH" 146 "Maxima Technologies" 145 "MurCal Controls" 144 "Mercury Marine" 143 "W. Gmeiner GmbH & Co." 142 "TRW Automotive (Commercial Steering Systems)" 141 "Thales Navigation Ltd." 140 "Lowrance Electronics, Inc." 139 "Caterpillar Trimble Control Technologies (CTCT), LLC" 138 "Georg Fritzmeier GmbH & Co. KG" 137 "Maretron" 136 "Komatsu Ltd." 135 "Airmar Technology Corporation" 134 "Iris Technology Ltd." 133 "Bucher Schoerling GmbH" 132 "Mulag-Fahrzeugwerk" 131 "ITT Industries" 130 "Nido - Universal Machines B.V." 129 "OMNEX Control Systems, Inc." 128 "Gerhard Duecker GmbH & Co. KG" 127 "Holland USA" 126 "Driver Tech" 125 "Nevada Automotive Test Center" 124 "Hydac Electronic" 123 "Basler Electric" 122 "FG Wilson (Engineering) Limited" 121 "HED (Hydro Electronic Devices, Inc.)" 120 "RDS Technology Ltd." 119 "IntegriNautics" 118 "Intron GmbH" 117 "HUSCO International" 116 "BEELINE Technologies" 115 "NACCO Materials Handling Group, Inc." 114 "EControls, Inc." 113 "Stress-Tek, Inc." 112 "MECALAC" 111 "Maschinenfabrik Bernhard Krone GmbH" 110 "EPIQ Sensor-Nite" 109 "TeeJet Technologies Denmark" 108 "WTK-Elecktronik GmbH" 107 "Grimme Landmaschinen GmbH & Co. KG" 106 "BAE Systems Controls, Inc." 105 "Kiepe Elektrik GmbH & Co. KG" 104 "Claas Selbstfahrende Erntemaschinen GmbH" 103 "Agrocom GmbH & Co. Agrarsystem KG" 102 "AGCO GmbH & Co." 101 "Sensoria" 100 "VDO Technik AG" 99 "International Transmissions Ltd (ITL)" 98 "Mueller-Elektronik GmbH & Co." 97 "Ag Leader Technology, Inc." 96 "Mech@tronic IT GmbH" 95 "Pacific Insight Electronics Corp." 94 "CNH Global N.V." 93 "Perkins Engines Company Ltd." 92 "Ag-Chem Equipment Co., Inc." 91 "BSG Bodensee Steuergeraete GmbH" 90 "Knorr-Bremse SfN GmbH" 89 "Kverneland Group, Electronics Division" 88 "Satloc Precision GPS" 87 "J.C. Bamford Excavators Ltd (JCB)" 86 "C.E. Niehoff & Company" 85 "Kohler Co." 84 "New Holland UK Limited" 83 "Eaton VORAD Technologies" 82 "Bobcat/Ingersoll-Rand" 81 "Fire Research Corp" 80 "Twin Disc, Inc." 79 "Daimler Benz AG - Engine Division (PBM)" 78 "Frank W. Murphy Manufacturing, Inc." 77 "Deere Power Systems Group" 76 "unused" 75 "Deere & Co. Agricultural Division" 74 "Eaton Axle-Brake Division" 73 "LeTourneau, Inc." 72 "Sisu Corporation" 71 "Vansco Electronics Ltd." 70 "Flex-Coil Limited" 69 "Trimble Navigation" 68 "Scania" 67 "Funk Manufacturing Company" 66 "John Deere Construction Equipment Division" 65 "MAN Nutzfahrzeuge AG" 64 "unused" 63 "ZF Industries Inc." 62 "Wabco" 61 "Volvo Truck Corp." 60 "Volvo Trucks North America Inc." 59 "VES Inc." 58 "SPX Corporation, OTC Division" 57 "Sauer-Danfoss Co." 56 "SAIC" 55 "Ryder System Inc." 54 "Meritor Wabco" 53 "Continental Automotive Systems US, Inc." 52 "Meritor Automotive, Inc." 51 "Robert Bosch GmbH" 50 "Robert Bosch Corp" 49 "RE America Inc." 48 "Pollak Alphabet" 47 "Phillips Semiconductor" 46 "Parasoft Computing Solutions" 45 "PACCAR" 44 "Nippondenso Co. Ltd." 43 "International Truck and Engine Corp. Vehicle Electronics" 42 "International Truck and Engine Corp. Engine Electronics" 41 "Motorola Inc." 40 "Motorola AIEG Inc." 39 "Microfirm Inc." 38 "Micro Processor Systems Inc." 37 "Mack Trucks Inc." 36 "Lucas Ltd." 35 "Kenworth Truck Co." 34 "Kelsey Hayes Co." 33 "John Deere" 32 "Jacobs Vehicle Systems" 31 "J Pollak Corp." 30 "Isuzu Motors Ltd." 29 "Hino Motors Ltd." 28 "Grote Ind. Inc." 27 "GMC" 26 "General Motors Corp., Service Technology Group" 25 "Daimler Trucks North America LLC" 24 "Ford Motor Co., Vehicle Controls" 23 "Ford Motor Co., Heavy Truck" 22 "Ford Motor Co., Electronic Concepts $ Systems" 21 "Echilin Inc., Midland Brake Inc." 20 "Eaton Ltd" 19 "Eaton Corp. Trucking Info Services" 18 "Eaton Corp, Transmission Division" 17 "Eaton Corp. Res & Dev" 16 "Eaton Corp." 15 "Dickey-John Corp." 14 "Detroit Diesel Corporation" 13 "Delco Electronics" 12 "Deere & Company, Precision Farming" 11 "Dearborn Group Inc." 10 "Cummins Engine Co." 9 "Chrysler Corp." 8 "Caterpillar Inc." 7 "Case Corp." 6 "Berifors Electronics AB" 5 "AMP Inc." 4 "Ametek-Dixson" 3 "Ametek, US Gauge Division" 2 "Allison Transmission, GMC" 1 "Allied Signal Inc." 0 "Reserved" 231 "Topcon Positioning Systems, Inc." 230 "Saucon Technologies" 229 "Garmin International Inc." 228 "ZF Marine Electronics" 227 "Lykketronic A/S" 226 "Monaco Coach Corporation" 225 "SKF" 224 "EMMI Network, S.L." 223 "Vaueo Retarder Co., Ltd." 263 "IMMI" 262 "HydraForce, Inc" 261 "Red Dot Corporation" 260 "Reichhardt GmbH" 259 "Jetter AG" 258 "ARAG" 257 "Honda Motor Co., Ltd" 256 "Tyco Electronics AMP" 255 "MEAS France" 254 "GE Sensing" 253 "Mobile Control Systems" 298 "Holley Performance" 297 "Zonar Systems Inc" 296 "micro dynamics GmbH" 295 "BEP Marine" 294 "Grayhill Inc." 293 "Spyder Controls Corp." 292 "IKUSI - Angel Iglesias S.A." 291 "Groeneveld Transport Efficiency BV" 290 "Kuebler GmbH" 289 "Watlow" 288 "Mitsubishi FUSO Truck & Bus Corp." 287 "NTech Industries, Inc" 286 "Coelmo srl" 285 "Sea Recovery Corp" 284 "Mobile Tech Chile" 283 "CWF Hamilton & Co Ltd" 282 "Medallion Instrumentation Systems" 281 "Precision Governors LLC" 311 "Patrick Power Products" 310 "TECNORD srl" 309 "Krauss-Maffei Wegmann GmbH & Co. KG" 308 "Cyntrx" 307 "MAS Technologies" 306 "Sleipner Motor AB" 305 "NovAtel Inc" 304 "EmpirBus AB" 303 "CTS Corporation" 302 "Nissin Kogyo Co., LTD" 301 "Parker Hannifin (UK) Ltd FDE group" 300 "Systron Donner Automotive" 299 "Rauch Landmaschinen GmbH" 280 "Leica Geosystems Pty Ltd" 279 "Geometris LP" 278 "Takata Electronics" 277 "LHP Telematics" 276 "Aqua-Hot Heating Systems" 275 "Navico Egersund AS" 274 "LTW Technology Co., LTD" 273 "Active Research Limited" 272 "Gross Mechanical Laboratories, Inc" 327 "Sonceboz SA" 326 "Akron Brass Company" 325 "ASM Automation Sensorik Messtechnik GmbH" 324 "Snap-on Diagnostics" 323 "Mobileye Vision Technologies Ltd." 322 "MICHENKA s.r.o." 321 "Ultra Electronics, Electrics" 320 "Miedema Landbouwwerktuigenfabriek B.V." 319 "Cadec Global" 318 "SAT Plan" 317 "Navtronics Bvba" 316 "ITT Flow Control" 315 "Icom Incorporated" 314 "CSM GmbH" 313 "Ilmor Engineering, Inc" 312 "Lectronix, Inc." 271 "Cole Hersee" 270 "Tennant" 269 "Saft America Inc.,  Space & Defense Division" 268 "Accurate Technologies" 267 "Red Lion Controls, Inc" 266 "International Thermal Research Ltd" 265 "MTS Sensor Technologie GmbH" 264 "Autolync" 248 "Cooper Standard Automotive Active Systems Group" 247 "ePULSE" 246 "Class 1, Inc" 245 "Capstan Ag Systems, Inc." 244 "Techno-Matic" 243 "eRide, Inc." 242 "Kokusandenki Co. Ltd" 241 "Schneider Automation SAS " 240 "Vanair Mfg" 239 "May & Scofield Ltd" 238 "ZF Friedrichshafen AG" 237 "Agtron Enterprises Inc" 236 "Norac Systems International Inc" 235 "SailorMade Marine Telemetry - Tetra Technology Ltd." 234 "Mondial electronic GmbH" ;
+VAL_ 2565799721 VehicleSystem 0 "Non-specific System" 127 "Not Available" ;
+VAL_ 2565799721 VehicleSystem5 127 "Not Available" 0 "Ind. Process Control Stationary" ;
+VAL_ 2565799721 VehicleSystem4 100 "Deck/Cargo/Fishing equip. sys" 90 "Environmental (HVAC) Systems" 80 "Instrumentation/General Systems" 70 "Communications Systems" 60 "Navigation Systems" 50 "Propulsion Systems" 40 "Steering Systems" 30 "Power Mgmt and lighting systems" 25 "Gateway" 20 "Safety Systems" 10 "System Tools" 127 "Not Available" 0 "Non-specific System" ;
+VAL_ 2565799721 VehicleSystem3 8 "Grader" 7 "Four Wheel Drive Loader" 6 "Forklift" 5 "Excavator" 4 "Crawler" 3 "Backhoe" 2 "Articulated Dump Truck" 1 "Skid Steer Loader" 127 "Not Available" 0 "Non-specific System" ;
+VAL_ 2565799721 VehicleSystem2 16 "Skidder" 15 "Earth Work" 14 "Special Crops" 13 "Powered Auxiliary Device" 12 "Farm Yard Operations" 11 "Transport/Trailer" 10 "Irrigation" 9 "Forage" 8 "Root Harvesters" 7 "Harvesters" 6 "Sprayers" 5 "Fertilizers" 4 "Planters/Seeders" 3 "Secondary Tillage" 2 "Tillage" 1 "Tractor" 127 "Not Available" 0 "Non-specific System" ;
+VAL_ 2565799721 VehicleSystem1 2 "Trailer" 1 "Tractor" 127 "Not Available" 0 "Non-specific System" ;
+CM_ BO_ 2565799762 "Address Claimed";
+CM_ SG_ 2565799762 IndustryGroup "0 = Global; 
+   1  = On-Highway; 
+   2  = Agricultural and Forestry; 
+   3  = Construction; 
+   4  = Marine;
+   5  = Industrial - Process
+          Control - Stationary (Gen-Sets)
+   6  = Reserve for SAE
+   7  = Reserve for SAE";
+VAL_ 2565799762 IndustryGroup 6 "Reserved for SAE" 7 "Reserved for SAE" 5 "IndustrialProcessCtrlStationary" 4 "Marine" 3 "Construction" 2 "Agricultural and Forestry" 1 "On-Highway" 0 "Global" ;
+VAL_ 2565799762 Function 127 "Reserved" 126 "Reserved" 125 "Reserved" 124 "Reserved" 123 "Reserved" 122 "Reserved" 121 "Reserved" 120 "Reserved" 119 "Reserved" 118 "Reserved" 117 "Reserved" 116 "Reserved" 115 "Reserved" 114 "Reserved" 113 "Reserved" 112 "Reserved" 111 "Reserved" 110 "Reserved" 109 "Reserved" 108 "Reserved" 107 "Reserved" 106 "Reserved" 105 "Reserved" 104 "Reserved" 103 "Reserved" 102 "Reserved" 101 "Reserved" 42 "Water Pump Control" 41 "Lighting - Operator Controls" 40 "Seat Control" 39 "Ignition Control Module" 38 "Tire Pressure Control" 37 "Cab Controller" 36 "Pneumatic - System Controller" 35 "Suspension - System Controller" 34 "Hydraulic Pump Controller" 33 "System Monitor" 32 "Headway Controller" 31 "Propulsion Battery Charger" 30 "Management Computer" 29 "Virtual Terminal (In Cab)" 28 "Off Vehicle Gateway" 27 "Power TakeOff (Secondary or Front)" 26 "Body Controller" 25 "Network Interconnect ECU" 24 "Vehicle Security" 23 "Vehicle Navigation" 22 "Aerodynamic Control" 21 "Cab Climate Control" 20 "Trip Recorder" 19 "Instrument Cluster" 18 "Suspension - Drive Axle" 17 "Suspension - Steer Axle" 16 "Steering Controller" 15 "Fuel System" 14 "Cruise Control" 13 "Retarder - Driveline" 12 "Retarder - Engine" 11 "Brakes - Drive Axle" 10 "Brakes - Steer Axle" 9 "Brakes - System Controller" 8 "Axle - Drive" 7 "Axle - Steering" 6 "Power TakeOff - (Main or Rear)" 5 "Shift Control/Console" 4 "Battery Pack Monitor" 3 "Transmission" 2 "Electric Propulsion Control" 1 "Auxiliary Power Unit (APU)" 0 "Engine" 100 "Reserved" 99 "Reserved" 98 "Reserved" 97 "Reserved" 96 "Reserved" 95 "Reserved" 94 "Reserved" 93 "Reserved" 92 "Reserved" 91 "Reserved" 90 "Reserved" 89 "Reserved" 88 "Reserved" 87 "Reserved" 86 "Reserved" 85 "Reserved" 84 "Reserved" 83 "Reserved" 82 "Reserved" 81 "Reserved" 80 "Reserved" 79 "Reserved" 78 "Reserved" 77 "Reserved" 76 "Reserved" 75 "Reserved" 74 "Reserved" 73 "Reserved" 72 "Coolant Valve Controller" 71 "Transfer Case Control" 70 "Auxiliary Regeneration Device" 69 "Engine Emission Aftertreatement System" 68 "Aftertreatment system gas measurement" 67 "Electrical System Controller" 66 "I/O Controller" 65 "Gas Flow Measurement" 64 "Endurance Braking" 63 "Engine Valve Controller" 62 "On-Board Diagnostic Unit" 61 "File Server/Printer" 60 "Cab Display" 59 "Starter" 58 "Fan Drive Control" 57 "Steering Column Unit" 56 "Communications Unit, Radio" 55 "Communications Unit, Satellite" 54 "Communications Unit, Cellular" 53 "Alternator/Charging System" 52 "Chassis Controller" 51 "Forward-Looking Collision Warning System" 50 "Auxiliary Heater" 49 "Clutch/Converter Control" 48 "Ramp Control" 47 "Information System Controller" 46 "Oil Sensor Unit" 45 "Vehicle Dynamic Stability Control" 44 "Exhaust Emission Control" 43 "Transmission Display" ;
+CM_ SG_ 2565799762 ManufacturerCode "Assigned by NMEA 2000 Committee";
+VAL_ 2565799762 ManufacturerCode 252 "Sensor-Technik Wiedemann GmbH" 251 "German Agricultural Society" 250 "Kuhn Group" 249 "Schaltbau GmbH" 233 "Yacht Monitoring Solutions Inc." 232 "TSD Integrated Controls" 1863 "Thomas G. Faria Co." 1862 "Sanshin" 1861 "Vector CANtech" 1860 "MMP" 1859 "Kvasar AB" 1858 "Litton" 1857 "Simrad" 1856 "Trimble" 1855 "Furuno USA" 1854 "Northstar Technologies" 1853 "Japan Radio Co." 1852 "Navionics" 1851 "Raymarine" 1850 "Teleflex" 222 "Generac Power Systems, Inc." 221 "SiE" 220 "Beede Electrical Instrument Company, Inc." 219 "Cat OEM Solutions" 218 "Gits Manufacturing Company" 217 "RM Michaelides Software & Elektronik GmbH" 216 "Paneltronics Inc." 215 "Aetna Engineering/Fireboy-Xintex" 214 "MC elettronica Srl" 213 "CNH Belgium N.V." 212 "Sure Power Industries, Inc." 211 "DNA Group" 210 "Iteris, Inc." 209 "Bell Equip. Co. SA (PTY) LTD" 208 "Drew Technologies, Inc." 207 "Otto Engineering" 206 "port GmbH" 205 "SmarTire Systems Inc" 204 "The Morey Corporation" 203 "MILtronik GmbH" 202 "Curtis Instruments, Inc." 201 "Disenos y Tecnologia S.A." 200 "MGM Brakes" 199 "Actia Corp." 198 "Mystic Valley Communications" 197 "Mechron Power Systems" 196 "LEMKEN GmbH & Co. KG" 195 "General Engine Products" 194 "TriMark Corporation" 193 "Jeppesen Marine" 192 "Floscan" 191 "XATA Corporation" 190 "Hella KGaA Hueck & Co." 189 "QUALCOMM" 188 "EMP Corp." 187 "Air-Weigh" 186 "Altronic, Inc." 185 "Beede Electrical Instrument Company" 184 "EIA Electronics" 183 "KDS Controls, Inc." 182 "Vehicle Systems Engineering B.V." 181 "Coretronics, Inc." 180 "Smart Power Systems" 179 "TeeJet Technologies Denmark" 178 "Siemens VDO Automotive AG" 177 "Diagnostic System Associates" 176 "Moritz Aerospace" 175 "Veris Technologies, Inc." 174 "AB Volvo Penta" 173 "Ryeso, Inc." 172 "Yanmar Marine USA" 171 "Wachendorff Elektronik GmbH & Co. KG" 170 "Computronics Corporation Ltd." 169 "Marlin Technologies Inc." 168 "Xantrex" 167 "JLG Industries Inc." 166 "Phoenix International" 165 "CPAC Systems AB" 164 "DaimlerChrysler Off-Highway" 163 "BRP Inc." 162 "Axiomatic Technologies" 161 "Offshore Systems (UK) Limited" 160 "Nido" 159 "NTech Industries Inc." 158 "Firestone Industrial Products Company" 157 "ISSPRO Inc." 156 "ITT Industries - Cannon" 155 "Vetronix Corporation" 154 "Westerbeke Corporation" 153 "Woodward, Industrial Controls Division" 152 "Elobau Elektrobauelemente GmbH & Co. KG" 151 "Raven Industries Inc. - Flow Controls Division" 150 "Fleetguard" 149 "Holset" 148 "Blue Water Data, Inc." 147 "Nautibus Electronic GmbH" 146 "Maxima Technologies" 145 "MurCal Controls" 144 "Mercury Marine" 143 "W. Gmeiner GmbH & Co." 142 "TRW Automotive (Commercial Steering Systems)" 141 "Thales Navigation Ltd." 140 "Lowrance Electronics, Inc." 139 "Caterpillar Trimble Control Technologies (CTCT), LLC" 138 "Georg Fritzmeier GmbH & Co. KG" 137 "Maretron" 136 "Komatsu Ltd." 135 "Airmar Technology Corporation" 134 "Iris Technology Ltd." 133 "Bucher Schoerling GmbH" 132 "Mulag-Fahrzeugwerk" 131 "ITT Industries" 130 "Nido - Universal Machines B.V." 129 "OMNEX Control Systems, Inc." 128 "Gerhard Duecker GmbH & Co. KG" 127 "Holland USA" 126 "Driver Tech" 125 "Nevada Automotive Test Center" 124 "Hydac Electronic" 123 "Basler Electric" 122 "FG Wilson (Engineering) Limited" 121 "HED (Hydro Electronic Devices, Inc.)" 120 "RDS Technology Ltd." 119 "IntegriNautics" 118 "Intron GmbH" 117 "HUSCO International" 116 "BEELINE Technologies" 115 "NACCO Materials Handling Group, Inc." 114 "EControls, Inc." 113 "Stress-Tek, Inc." 112 "MECALAC" 111 "Maschinenfabrik Bernhard Krone GmbH" 110 "EPIQ Sensor-Nite" 109 "TeeJet Technologies Denmark" 108 "WTK-Elecktronik GmbH" 107 "Grimme Landmaschinen GmbH & Co. KG" 106 "BAE Systems Controls, Inc." 105 "Kiepe Elektrik GmbH & Co. KG" 104 "Claas Selbstfahrende Erntemaschinen GmbH" 103 "Agrocom GmbH & Co. Agrarsystem KG" 102 "AGCO GmbH & Co." 101 "Sensoria" 100 "VDO Technik AG" 99 "International Transmissions Ltd (ITL)" 98 "Mueller-Elektronik GmbH & Co." 97 "Ag Leader Technology, Inc." 96 "Mech@tronic IT GmbH" 95 "Pacific Insight Electronics Corp." 94 "CNH Global N.V." 93 "Perkins Engines Company Ltd." 92 "Ag-Chem Equipment Co., Inc." 91 "BSG Bodensee Steuergeraete GmbH" 90 "Knorr-Bremse SfN GmbH" 89 "Kverneland Group, Electronics Division" 88 "Satloc Precision GPS" 87 "J.C. Bamford Excavators Ltd (JCB)" 86 "C.E. Niehoff & Company" 85 "Kohler Co." 84 "New Holland UK Limited" 83 "Eaton VORAD Technologies" 82 "Bobcat/Ingersoll-Rand" 81 "Fire Research Corp" 80 "Twin Disc, Inc." 79 "Daimler Benz AG - Engine Division (PBM)" 78 "Frank W. Murphy Manufacturing, Inc." 77 "Deere Power Systems Group" 76 "unused" 75 "Deere & Co. Agricultural Division" 74 "Eaton Axle-Brake Division" 73 "LeTourneau, Inc." 72 "Sisu Corporation" 71 "Vansco Electronics Ltd." 70 "Flex-Coil Limited" 69 "Trimble Navigation" 68 "Scania" 67 "Funk Manufacturing Company" 66 "John Deere Construction Equipment Division" 65 "MAN Nutzfahrzeuge AG" 64 "unused" 63 "ZF Industries Inc." 62 "Wabco" 61 "Volvo Truck Corp." 60 "Volvo Trucks North America Inc." 59 "VES Inc." 58 "SPX Corporation, OTC Division" 57 "Sauer-Danfoss Co." 56 "SAIC" 55 "Ryder System Inc." 54 "Meritor Wabco" 53 "Continental Automotive Systems US, Inc." 52 "Meritor Automotive, Inc." 51 "Robert Bosch GmbH" 50 "Robert Bosch Corp" 49 "RE America Inc." 48 "Pollak Alphabet" 47 "Phillips Semiconductor" 46 "Parasoft Computing Solutions" 45 "PACCAR" 44 "Nippondenso Co. Ltd." 43 "International Truck and Engine Corp. Vehicle Electronics" 42 "International Truck and Engine Corp. Engine Electronics" 41 "Motorola Inc." 40 "Motorola AIEG Inc." 39 "Microfirm Inc." 38 "Micro Processor Systems Inc." 37 "Mack Trucks Inc." 36 "Lucas Ltd." 35 "Kenworth Truck Co." 34 "Kelsey Hayes Co." 33 "John Deere" 32 "Jacobs Vehicle Systems" 31 "J Pollak Corp." 30 "Isuzu Motors Ltd." 29 "Hino Motors Ltd." 28 "Grote Ind. Inc." 27 "GMC" 26 "General Motors Corp., Service Technology Group" 25 "Daimler Trucks North America LLC" 24 "Ford Motor Co., Vehicle Controls" 23 "Ford Motor Co., Heavy Truck" 22 "Ford Motor Co., Electronic Concepts $ Systems" 21 "Echilin Inc., Midland Brake Inc." 20 "Eaton Ltd" 19 "Eaton Corp. Trucking Info Services" 18 "Eaton Corp, Transmission Division" 17 "Eaton Corp. Res & Dev" 16 "Eaton Corp." 15 "Dickey-John Corp." 14 "Detroit Diesel Corporation" 13 "Delco Electronics" 12 "Deere & Company, Precision Farming" 11 "Dearborn Group Inc." 10 "Cummins Engine Co." 9 "Chrysler Corp." 8 "Caterpillar Inc." 7 "Case Corp." 6 "Berifors Electronics AB" 5 "AMP Inc." 4 "Ametek-Dixson" 3 "Ametek, US Gauge Division" 2 "Allison Transmission, GMC" 1 "Allied Signal Inc." 0 "Reserved" 231 "Topcon Positioning Systems, Inc." 230 "Saucon Technologies" 229 "Garmin International Inc." 228 "ZF Marine Electronics" 227 "Lykketronic A/S" 226 "Monaco Coach Corporation" 225 "SKF" 224 "EMMI Network, S.L." 223 "Vaueo Retarder Co., Ltd." 263 "IMMI" 262 "HydraForce, Inc" 261 "Red Dot Corporation" 260 "Reichhardt GmbH" 259 "Jetter AG" 258 "ARAG" 257 "Honda Motor Co., Ltd" 256 "Tyco Electronics AMP" 255 "MEAS France" 254 "GE Sensing" 253 "Mobile Control Systems" 298 "Holley Performance" 297 "Zonar Systems Inc" 296 "micro dynamics GmbH" 295 "BEP Marine" 294 "Grayhill Inc." 293 "Spyder Controls Corp." 292 "IKUSI - Angel Iglesias S.A." 291 "Groeneveld Transport Efficiency BV" 290 "Kuebler GmbH" 289 "Watlow" 288 "Mitsubishi FUSO Truck & Bus Corp." 287 "NTech Industries, Inc" 286 "Coelmo srl" 285 "Sea Recovery Corp" 284 "Mobile Tech Chile" 283 "CWF Hamilton & Co Ltd" 282 "Medallion Instrumentation Systems" 281 "Precision Governors LLC" 311 "Patrick Power Products" 310 "TECNORD srl" 309 "Krauss-Maffei Wegmann GmbH & Co. KG" 308 "Cyntrx" 307 "MAS Technologies" 306 "Sleipner Motor AB" 305 "NovAtel Inc" 304 "EmpirBus AB" 303 "CTS Corporation" 302 "Nissin Kogyo Co., LTD" 301 "Parker Hannifin (UK) Ltd FDE group" 300 "Systron Donner Automotive" 299 "Rauch Landmaschinen GmbH" 280 "Leica Geosystems Pty Ltd" 279 "Geometris LP" 278 "Takata Electronics" 277 "LHP Telematics" 276 "Aqua-Hot Heating Systems" 275 "Navico Egersund AS" 274 "LTW Technology Co., LTD" 273 "Active Research Limited" 272 "Gross Mechanical Laboratories, Inc" 327 "Sonceboz SA" 326 "Akron Brass Company" 325 "ASM Automation Sensorik Messtechnik GmbH" 324 "Snap-on Diagnostics" 323 "Mobileye Vision Technologies Ltd." 322 "MICHENKA s.r.o." 321 "Ultra Electronics, Electrics" 320 "Miedema Landbouwwerktuigenfabriek B.V." 319 "Cadec Global" 318 "SAT Plan" 317 "Navtronics Bvba" 316 "ITT Flow Control" 315 "Icom Incorporated" 314 "CSM GmbH" 313 "Ilmor Engineering, Inc" 312 "Lectronix, Inc." 271 "Cole Hersee" 270 "Tennant" 269 "Saft America Inc.,  Space & Defense Division" 268 "Accurate Technologies" 267 "Red Lion Controls, Inc" 266 "International Thermal Research Ltd" 265 "MTS Sensor Technologie GmbH" 264 "Autolync" 248 "Cooper Standard Automotive Active Systems Group" 247 "ePULSE" 246 "Class 1, Inc" 245 "Capstan Ag Systems, Inc." 244 "Techno-Matic" 243 "eRide, Inc." 242 "Kokusandenki Co. Ltd" 241 "Schneider Automation SAS " 240 "Vanair Mfg" 239 "May & Scofield Ltd" 238 "ZF Friedrichshafen AG" 237 "Agtron Enterprises Inc" 236 "Norac Systems International Inc" 235 "SailorMade Marine Telemetry - Tetra Technology Ltd." 234 "Mondial electronic GmbH" ;
+VAL_ 2565799762 VehicleSystem 0 "Non-specific System" 127 "Not Available" ;
+VAL_ 2565799762 VehicleSystem5 127 "Not Available" 0 "Ind. Process Control Stationary" ;
+VAL_ 2565799762 VehicleSystem4 100 "Deck/Cargo/Fishing equip. sys" 90 "Environmental (HVAC) Systems" 80 "Instrumentation/General Systems" 70 "Communications Systems" 60 "Navigation Systems" 50 "Propulsion Systems" 40 "Steering Systems" 30 "Power Mgmt and lighting systems" 25 "Gateway" 20 "Safety Systems" 10 "System Tools" 127 "Not Available" 0 "Non-specific System" ;
+VAL_ 2565799762 VehicleSystem3 8 "Grader" 7 "Four Wheel Drive Loader" 6 "Forklift" 5 "Excavator" 4 "Crawler" 3 "Backhoe" 2 "Articulated Dump Truck" 1 "Skid Steer Loader" 127 "Not Available" 0 "Non-specific System" ;
+VAL_ 2565799762 VehicleSystem2 16 "Skidder" 15 "Earth Work" 14 "Special Crops" 13 "Powered Auxiliary Device" 12 "Farm Yard Operations" 11 "Transport/Trailer" 10 "Irrigation" 9 "Forage" 8 "Root Harvesters" 7 "Harvesters" 6 "Sprayers" 5 "Fertilizers" 4 "Planters/Seeders" 3 "Secondary Tillage" 2 "Tillage" 1 "Tractor" 127 "Not Available" 0 "Non-specific System" ;
+VAL_ 2565799762 VehicleSystem1 2 "Trailer" 1 "Tractor" 127 "Not Available" 0 "Non-specific System" ;
+CM_ BO_ 2565865513 "Electronic Retarder Controller 1";
+CM_ SG_ 2565865513 SrcAddrssOfCtrllngDvcFrRtrdrCntr "The source address of the SAE J1939 device currently controlling the retarder.";
+CM_ SG_ 2565865513 IntendedRetarderPercentTorque "Braking torque of retarder that the retarder is currently trying to achieve.";
+CM_ SG_ 2565865513 ActualRetarderPercentTorque "Actual braking torque of the retarder as a percent of retarder configuration reference torque SPN 556.";
+CM_ SG_ 2565865513 RetarderTorqueMode "State signal which indicates which retarder torque mode is currently generating, limiting, or controlling the torque.";
+CM_ BO_ 2565865728 "Electronic Brake Controller 1";
+CM_ SG_ 2565865728 EngRetarderSelection "The position of the operator controlled selector, expressed as a percentage and determined by the ratio of the current";
+CM_ BO_ 2565874688 "Aftertreatment 1 SCR Dosing System Requests 1";
+CM_ SG_ 2565874688 Aftrtratment1SCRSystemRqedState "Requested state of SCR system for aftertreatment system 1 (exhaust bank 1).";
+VAL_ 2565874688 Aftrtratment1SCRSystemRqedState 15 "NotAvailable" 14 "Error" 11 "1101RsrvdFrFtureAssignmentBySAE" 10 "ServiceTestModeDosingNotAllowed" 9 "ServiceTestModeDosingAllowed" 8 "Diagnosis" 7 "Shutoff" 6 "ProtectModeAgainstCold" 5 "ProtectModeAgainstHeat" 4 "RservedForFutureAssignmentBySAE" 3 "SystemErrorPending" 2 "NormalDosingOperation" 1 "PreparingDosingReadiness" 0 "Dormant" ;
+CM_ SG_ 2565874688 Aftrtrtmnt1SCRRqdDsngRgntQntity "Actual requested dosing quantity of catalyst reagent";
+CM_ BO_ 2566733312 "Aftertreatment 1 SCR Exhaust Gas Temperature";
+CM_ SG_ 2566733312 Aftrtrtmnt1SCRCtlystOtltGasTemp "Temperature of engine combustion byproducts leaving the SCR catalyst exhaust in exhaust bank 1.";
+CM_ SG_ 2566733312 Aftrtrtmnt1SCRCtlystIntkGasTemp "Temperature of engine combustion byproducts entering the SCR catalyst in exhaust bank 1.";
+CM_ BO_ 2566733824 "Aftertreatment 1 SCR Dosing System Requests 2";
+CM_ SG_ 2566733824 Aftrtrtmnt1SCRCtlystTnkHaterCmd "Command for the Aftertreatment 1 SCR Catalyst Tank Heater.";
+CM_ SG_ 2566733824 Aftrtrtmnt1SCRCtlystRgntLnHter4 "The SCR catalyst reagent line heater 4 request for aftertreatment system 1 (exhaust bank 1).";
+VAL_ 2566733824 Aftrtrtmnt1SCRCtlystRgntLnHter4 3 "notAvailable" 2 "rservedForFutureAssignmentBySAE" 1 "RqForHeaterToBeActive" 0 "RqForHeaterToBeInactive" ;
+CM_ SG_ 2566733824 Aftrtrtmnt1SCRCtlystRgntLnHter3 "The SCR catalyst reagent line heater 3 request for aftertreatment system 1 (exhaust bank 1).";
+VAL_ 2566733824 Aftrtrtmnt1SCRCtlystRgntLnHter3 3 "notAvailable" 2 "rservedForFutureAssignmentBySAE" 1 "RqForHeaterToBeActive" 0 "RqForHeaterToBeInactive" ;
+CM_ SG_ 2566733824 Aftrtrtmnt1SCRCtlystRgntLnHter2 "The SCR catalyst reagent line heater 2 request for aftertreatment system 1 (exhaust bank 1).";
+VAL_ 2566733824 Aftrtrtmnt1SCRCtlystRgntLnHter2 3 "notAvailable" 2 "rservedForFutureAssignmentBySAE" 1 "RqForHeaterToBeActive" 0 "RqForHeaterToBeInactive" ;
+CM_ SG_ 2566733824 Aftrtrtmnt1SCRCtlystRgntLnHter1 "The SCR catalyst reagent line heater 1 request for aftertreatment system 1 (exhaust bank 1).";
+VAL_ 2566733824 Aftrtrtmnt1SCRCtlystRgntLnHter1 3 "notAvailable" 2 "rservedForFutureAssignmentBySAE" 1 "RqForHeaterToBeActive" 0 "RqForHeaterToBeInactive" ;
+CM_ SG_ 2566733824 Aftrtrtmnt1SCRDserHeatingModeRq "Used if multiple heater modes are available in the Doser.";
+VAL_ 2566733824 Aftrtrtmnt1SCRDserHeatingModeRq 7 "NotAvailable" 4 "110Reserved" 3 "HeaterOn" 2 "HeaterAutomaticMode" 1 "HeaterEconomyMode" 0 "HeaterOff" ;
+CM_ BO_ 2566768128 "Cold Start Aids";
+CM_ SG_ 2566768128 EngStartEnableDevice2Config "The start enable device installed for start enable device 2.";
+VAL_ 2566768128 EngStartEnableDevice2Config 15 "NotAvailable" 5 "1110Reserved" 4 "ElctricIntakeAirHeaterInstalled" 3 "EtherInjectionInstalled" 2 "FuelledStartInstalled" 1 "GlowPlugsInstalled" 0 "NoStartEnableDevice2Installed" ;
+CM_ SG_ 2566768128 EngStartEnableDevice1Config "The start enable device installed for start enable device 1.";
+VAL_ 2566768128 EngStartEnableDevice1Config 15 "NotAvailable" 5 "1110Reserved" 4 "ElctricIntakeAirHeaterInstalled" 3 "EtherInjectionInstalled" 2 "FuelledStartInstalled" 1 "GlowPlugsInstalled" 0 "NoStartEnableDevice1Installed" ;
+CM_ SG_ 2566768128 EngStartEnableDevice2 "Devices that assist an engine in starting, e.";
+VAL_ 2566768128 EngStartEnableDevice2 3 "NotAvailable" 2 "Reserved" 1 "StartEnableON" 0 "StartEnableOFF" ;
+CM_ SG_ 2566768128 EngStartEnableDevice1 "Devices that assist an Engine in starting, e.";
+VAL_ 2566768128 EngStartEnableDevice1 3 "NotAvailable" 2 "Reserved" 1 "StartEnableON" 0 "StartEnableOFF" ;
+CM_ BO_ 2566776064 "Maximum Vehicle Speed Limit Status";
+CM_ SG_ 2566776064 AppliedVehicleSpeedLimit "The vehicle speed limit in effect.";
+CM_ SG_ 2566776064 MaxVehicleSpeedLimit1 "The lowest Maximum Vehicle Speed Limit.";
+CM_ BO_ 2566804992 "Aftertreatment 1 SCR Reagent Tank 1 Information";
+CM_ SG_ 2566804992 Aftrtrtmnt1SCRCtalystTankHeater "Percentage of heating applied to the aftertreatment 1 catalyst tank heater.";
+CM_ SG_ 2566804992 Aftrtrtmnt1DEFTnkLwLvlIndicator "The desired illumination of the driver's warning indicator for diesel exhaust fluid (DEF) tank low level.";
+VAL_ 2566804992 Aftrtrtmnt1DEFTnkLwLvlIndicator 7 "notAvailable" 4 "OnFastBlink" 6 "reservedForSAEAssignment" 1 "OnSolid" 0 "Off" ;
+CM_ SG_ 2566804992 Aftrtrtment1SCRCatalystTankTemp "Temperature of the reagent in the storage tank.";
+CM_ SG_ 2566804992 Aftrtrtmnt1SCRCatalystTankLevel "A special catalyst uses a chemical reagent to reach legal requirement for NOX emissions.";
+VAL_ 2566804992 Aftrtrtmnt1SCRCatalystTankLevel 4 "Full" 0 "Empty" ;
+CM_ BO_ 2566831360 "Fan Drive";
+CM_ SG_ 2566831360 FanDriveState "This parameter is used to indicate the current state or mode of operation by the fan drive.";
+VAL_ 2566831360 FanDriveState 15 "NotAvailable" 14 "Other" 13 "EngBrake" 12 "Timer" 11 "A_CSystem" 10 "TransRetarder" 9 "ManualCtrl" 8 "ReverseOperation" 7 "DefaultOperation" 6 "ExcessiveHydOilTemp" 5 "ExcessiveTransOilTemp" 4 "ExcessiveEngCoolantTemp" 3 "ExcessiveEngOilTemp" 2 "ExcessiveEngAirTemp" 1 "EngSystemGeneral" 0 "FanOff" ;
+CM_ BO_ 2566832384 "High Resolution Vehicle Distance";
+CM_ SG_ 2566832384 HighResolutionTripDistance "Distance traveled during all or part of a journey.";
+CM_ SG_ 2566832384 HghRslutionTotalVehicleDistance "Accumulated distance traveled by the vehicle during its operation.";
+CM_ BO_ 2566832622 "High Resolution Vehicle Distance";
+CM_ SG_ 2566832622 HighResolutionTripDistance "Distance traveled during all or part of a journey.";
+CM_ SG_ 2566832622 HghRslutionTotalVehicleDistance "Accumulated distance traveled by the vehicle during its operation.";
+CM_ BO_ 2566839040 "Engine Fluid Level/Pressure 2";
+CM_ SG_ 2566839040 EngInjectorMeteringRail1Press "The gage pressure of fuel in the primary, or first, metering rail as delivered from the supply pump to the injector metering";
+CM_ BO_ 2566840064 "Electronic Engine Controller 3";
+CM_ SG_ 2566840064 EngsDsrdOprtngSpdAsymmtryAdjstmn "This byte is utilized in transmission gear selection routines and indicates the engine's preference of lower versus higher";
+CM_ SG_ 2566840064 Aftertreatment1ExhaustDewPoint "Indicates that the temperature on the exhaust side of the aftertreatment has exceeded the dew point, as estimated by the";
+VAL_ 2566840064 Aftertreatment1ExhaustDewPoint 3 "NotAvailable" 2 "Error" 1 "ExceededDewPoint" 0 "NotExceededDewPoint" ;
+CM_ SG_ 2566840064 EngsDesiredOperatingSpeed "An indication by the engine of the optimal operating speed of the engine for the current existing conditions.";
+CM_ SG_ 2566840064 NominalFrictionPercentTorque "The calculated torque that indicates the amount of torque required by the basic engine itself added by the loss torque of";
+CM_ BO_ 2566840320 "Vehicle Distance";
+CM_ SG_ 2566840320 TotalVehicleDistance "Accumulated distance traveled by vehicle during its operation.";
+CM_ SG_ 2566840320 TripDistance "Distance traveled during all or part of a journey.";
+CM_ BO_ 2566841344 "Shutdown";
+CM_ SG_ 2566841344 EngProtectionSystemConfig "Parameter which indicates the configuration of the engine shutdown system.";
+VAL_ 2566841344 EngProtectionSystemConfig 3 "NotAvailable" 2 "Error" 1 "EnabledInCalib" 0 "DisabledInCalib" ;
+CM_ SG_ 2566841344 EngIdleShutdownTimerFunction "Parameter which indicates the configuration of the idle shutdown timer system.";
+VAL_ 2566841344 EngIdleShutdownTimerFunction 3 "NotAvailable" 2 "Error" 1 "EnabledInCalib" 0 "DisabledInCalib" ;
+CM_ BO_ 2566841600 "Engine Hours, Revolutions";
+CM_ SG_ 2566841600 EngTotalRevolutions "Accumulated number of revolutions of engine crankshaft during its operation.";
+CM_ SG_ 2566841600 EngTotalHoursOfOperation "Accumulated time of operation of engine.";
+CM_ BO_ 2566842094 "Time/Date";
+CM_ SG_ 2566842094 LocalHourOffset "The hour component of the offset between the UTC (Universal Time Coordinate) time and date and a local time zone time";
+CM_ SG_ 2566842094 LocalMinuteOffset "The minute component of the offset between the UTC time and date and a local time zone time and date.";
+CM_ SG_ 2566842094 Year "The year component of the current calendar date.";
+CM_ SG_ 2566842094 Day "The day component of the current calendar date.";
+CM_ SG_ 2566842094 Month "The month component of the current calendar date.";
+CM_ SG_ 2566842094 Hours "The hour component of the current time of day.";
+CM_ SG_ 2566842094 Minutes "The minutes component of the current time of day.";
+CM_ SG_ 2566842094 Seconds "The seconds component of the current time of day.";
+CM_ BO_ 2566842624 "Fuel Consumption (Liquid)";
+CM_ SG_ 2566842624 EngTotalFuelUsed "Accumulated amount of fuel used during vehicle operation.";
+CM_ SG_ 2566842624 EngTripFuel "Fuel consumed during all or part of a journey.";
+CM_ BO_ 2566843904 "Engine Temperature 1";
+CM_ SG_ 2566843904 EngCoolantTemp "Temperature of liquid found in engine cooling system.";
+CM_ BO_ 2566844160 "Engine Fluid Level/Pressure 1";
+CM_ SG_ 2566844160 EngOilPress "Gage pressure of oil in engine lubrication system as provided by oil pump.";
+CM_ SG_ 2566844160 EngFuelDeliveryPress "Gage pressure of fuel in system as delivered from supply pump to the injection pump.";
+CM_ BO_ 2566844183 "Engine Fluid Level/Pressure 1";
+CM_ SG_ 2566844183 EngCoolantLevel "Ratio of volume of liquid found in engine cooling system to total cooling system volume.";
+CM_ BO_ 2566844672 "Cruise Control/Vehicle Speed";
+CM_ SG_ 2566844672 PTOGovernorState "This parameter is used to indicate the current state or mode of operation by the power takeoff (PTO) governor.";
+VAL_ 2566844672 PTOGovernorState 31 "NotAvailable" 20 "11110NotDefined" 19 "PTOSetSpeedMemory2" 18 "PTOSetSpeedMemory1" 17 "PreprogrammedSetSpeed8" 16 "PreprogrammedSetSpeed7" 15 "PreprogrammedSetSpeed6" 14 "PreprogrammedSetSpeed5" 13 "PreprogrammedSetSpeed4" 12 "PreprogrammedSetSpeed3" 11 "PreprogrammedSetSpeed2" 10 "PreprogrammedSetSpeed1" 9 "AccelOverride" 8 "Accelerate" 7 "Resume" 6 "Decelerate_Coast" 5 "Set" 4 "RemoteStandby" 3 "Standby" 2 "RemoteHold" 1 "Hold" 0 "Off_Disabled" ;
+CM_ SG_ 2566844672 CruiseCtrlStates "This parameter is used to indicate the current state, or mode, of operation by the cruise control device.";
+VAL_ 2566844672 CruiseCtrlStates 7 "NotAvailable" 6 "AccelOverride" 5 "Set" 4 "Resume" 3 "Decelerate" 2 "Accelerate" 1 "Hold" 0 "Off_Disabled" ;
+CM_ SG_ 2566844672 CruiseCtrlSetSpeed "Value of set (chosen) velocity of velocity control system.";
+CM_ SG_ 2566844672 CruiseCtrlAccelerateSwitch "Switch signal of the cruise control activator which indicates that the activator is in the position [accelerate.";
+VAL_ 2566844672 CruiseCtrlAccelerateSwitch 3 "NotAvailable" 2 "Error" 1 "CrsCtrlActivatorInPosAccelerate" 0 "CrsCtrlActvtrNotInPosAccelerate" ;
+CM_ SG_ 2566844672 CruiseCtrlResumeSwitch "Switch signal of the cruise control activator which indicates that the activator is in the position [resume.";
+VAL_ 2566844672 CruiseCtrlResumeSwitch 3 "NotAvailable" 2 "Error" 1 "CruiseCtrlActivatorInPosResume" 0 "CrseCtrlActivatorNotInPosResume" ;
+CM_ SG_ 2566844672 CruiseCtrlCoastSwitch "Switch signal of the cruise control activator which indicates that the activator is in the position [coast (decelerate).";
+VAL_ 2566844672 CruiseCtrlCoastSwitch 3 "NotAvailable" 2 "Error" 1 "CruiseCtrlActivatorInPosCoast" 0 "CriseCtrlActivatorNotInPosCoast" ;
+CM_ SG_ 2566844672 CruiseCtrlSetSwitch "Switch signal of the cruise control activator which indicates that the activator is in the position [set.";
+VAL_ 2566844672 CruiseCtrlSetSwitch 3 "NotAvailable" 2 "Error" 1 "CruiseCtrlActivatorInPosSet" 0 "CruiseCtrlActivatorNotInPosSet" ;
+CM_ SG_ 2566844672 ClutchSwitch "Switch signal which indicates that the clutch pedal is being pressed.";
+VAL_ 2566844672 ClutchSwitch 3 "NotAvailable" 2 "Error" 1 "ClutchPedalDepressed" 0 "ClutchPedalReleased" ;
+CM_ SG_ 2566844672 BrakeSwitch "Switch signal which indicates that the driver operated brake foot pedal is being pressed.";
+VAL_ 2566844672 BrakeSwitch 3 "NotAvailable" 2 "Error" 1 "BrakePedalDepressed" 0 "BrakePedalReleased" ;
+CM_ SG_ 2566844672 CruiseCtrlEnableSwitch "Switch signal which indicates that it is possible to manage the cruise control function.";
+VAL_ 2566844672 CruiseCtrlEnableSwitch 3 "NotAvailable" 2 "Error" 1 "CruiseCtrlEnabled" 0 "CruiseCtrlDisabled" ;
+CM_ SG_ 2566844672 CruiseCtrlActive "Cruise control is switched on.";
+VAL_ 2566844672 CruiseCtrlActive 3 "NotAvailable" 2 "Error" 1 "CruiseCtrlSwitchedOn" 0 "CruiseCtrlSwitchedOff" ;
+CM_ SG_ 2566844672 WheelBasedVehicleSpeed "Speed of the vehicle as calculated from wheel or tailshaft speed.";
+CM_ BO_ 2566844695 "Cruise Control/Vehicle Speed";
+CM_ SG_ 2566844695 ParkingBrakeSwitch "Switch signal which indicates when the parking brake is set.";
+VAL_ 2566844695 ParkingBrakeSwitch 3 "NotAvailable" 2 "Error" 1 "ParkingBrakeSet" 0 "ParkingBrakeNotSet" ;
+CM_ BO_ 2566844928 "Fuel Economy (Liquid)";
+CM_ SG_ 2566844928 EngAverageFuelEconomy "Average of instantaneous fuel economy for that segment of vehicle operation of interest.";
+CM_ SG_ 2566844928 EngInstantaneousFuelEconomy "Current fuel economy at current vehicle velocity.";
+CM_ SG_ 2566844928 EngFuelRate "Amount of fuel consumed by engine per unit of time.";
+CM_ BO_ 2566845696 "Ambient Conditions";
+CM_ SG_ 2566845696 BarometricPress "Absolute air pressure of the atmosphere.";
+CM_ BO_ 2566845952 "Intake/Exhaust Conditions 1";
+CM_ SG_ 2566845952 EngIntakeManifold1Temp "Temperature of pre-combustion air found in intake manifold of engine air supply system.";
+CM_ SG_ 2566845952 EngIntakeManifold1Press "The gage pressure measurement of the air intake manifold.";
+CM_ BO_ 2566846208 "Vehicle Electrical Power 1";
+CM_ SG_ 2566846208 BatteryPotential_PowerInput1 "This parameter measures the first source of battery potential as measured at the input of the ECM/actuator etc.";
+CM_ BO_ 2566847511 "Dash Display";
+CM_ SG_ 2566847511 FuelLevel1 "Ratio of volume of fuel to the total volume of fuel storage container.";
+CM_ SG_ 2566847511 EngOilFilterDiffPress "Change in engine oil pressure, measured across the filter, due to the filter and any accumulation of solid or semisolid";
+CM_ SG_ 2566847511 EngFuelFilterDiffPress "Differential pressure measured across the fuel filter located between the fuel tank and the supply pump.";
+CM_ BO_ 2566848256 "Water in Fuel Indicator";
+CM_ SG_ 2566848256 WaterInFuelIndicator "Signal which indicates the presence of water in the fuel.";
+VAL_ 2566848256 WaterInFuelIndicator 3 "NotAvailable" 2 "Error" 1 "Yes" 0 "No" ;
+CM_ BO_ 2631794711 "Reset";
+CM_ SG_ 2631794711 TripGroup1 "Command signal used to reset the PGNs and parameters as defined in Table SPN988_A.";
+VAL_ 2631794711 TripGroup1 2 "Reserved" 3 "NotApplicable" 1 "Reset" 0 "TakeNoAction" ;
+CM_ BO_ 2631855639 "Reset";
+CM_ SG_ 2631855639 TripGroup1 "Command signal used to reset the PGNs and parameters as defined in Table SPN988_A.";
+VAL_ 2631855639 TripGroup1 2 "Reserved" 3 "NotApplicable" 1 "Reset" 0 "TakeNoAction" ;
+CM_ BO_ 2632515566 "Acknowledgment Message";
+VAL_ 2632515566 ControlByte 3 "CannotRespond" 2 "AccessDenied" 1 "NACK" 0 "ACK" ;
+CM_ SG_ 2632515566 ParameterGroupNumber "PGN which is requested by Request2 message";
