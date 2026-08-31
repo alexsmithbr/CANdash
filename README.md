@@ -9,6 +9,11 @@ The current release is deliberately **receive-only**. Demo and candump replay
 run completely in the browser. Live SocketCAN uses a small Python WebSocket
 bridge that contains no CAN transmit API.
 
+## Disclaimer
+
+This project is - at least up to now - completely AI-generated. I don't even
+code in Node.js. :)
+
 ## Included today
 
 - Responsive gauges for desktop, mounted screens, tablets, and phones
