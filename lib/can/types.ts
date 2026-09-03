@@ -1,4 +1,4 @@
-export type GaugeType = "speedometer" | "tachometer" | "radial" | "bar" | "numeric" | "odometer";
+export type GaugeType = "speedometer" | "tachometer" | "radial" | "temperature" | "pressure" | "bar" | "numeric" | "odometer" | "history" | "histogram" | "formula";
 export type ByteOrder = "little" | "big";
 
 export type SignalDefinition = {
@@ -19,6 +19,7 @@ export type SignalDefinition = {
 export type SignalSource = {
   sourceAddress: number | null;
   pgn: number;
+  canId?: number;
   messageName?: string;
   signal: SignalDefinition;
 };
@@ -33,6 +34,34 @@ export type GaugeDefinition = {
   critical?: number;
   staleAfterMs: number;
   sources: SignalSource[];
+  conversion?: UnitConversion;
+  formula?: FormulaDefinition;
+  smoothing?: SmoothingDefinition;
+  historyWindowMs?: number;
+  longAverage?: LongAverageDefinition;
+};
+
+export type SmoothingDefinition = {
+  method: "none" | "ema" | "moving-average";
+  windowMs: number;
+};
+
+export type LongAverageDefinition = {
+  enabled: boolean;
+  method: "time-weighted" | "ratio-of-integrals";
+};
+
+export type UnitConversion = {
+  preset: string;
+  unit: string;
+  scale: number;
+  offset: number;
+};
+
+export type FormulaDefinition = {
+  expression: string;
+  unit: string;
+  decimals?: number;
 };
 
 export type DashboardProfile = {
@@ -62,9 +91,17 @@ export type J1939Id = {
 
 export type GaugeReading = {
   value: number;
+  rawValue?: number;
   updatedAt: number;
   sourceIndex: number;
   pulse: number;
+  dependencyPulse?: string;
+  longAverage?: number;
+};
+
+export type GaugeHistoryPoint = {
+  value: number;
+  timestamp: number;
 };
 
 export type DiscoveryEntry = {
@@ -77,6 +114,27 @@ export type DiscoveryEntry = {
   lastSeen: number;
   lastData: number[];
   rate: number;
+};
+
+export type DbcSignal = SignalDefinition & {
+  receivers: string[];
+};
+
+export type DbcMessage = {
+  canId: number;
+  pgn: number;
+  sourceAddress: number | null;
+  name: string;
+  length: number;
+  transmitter: string;
+  signals: DbcSignal[];
+};
+
+export type DbcDatabase = {
+  id: string;
+  name: string;
+  importedAt: number;
+  messages: DbcMessage[];
 };
 
 export type DiagnosticFault = {

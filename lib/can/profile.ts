@@ -25,11 +25,11 @@ export const DEFAULT_PROFILE: DashboardProfile = {
       sources: [{ sourceAddress: 0x00, pgn: 0xf004, messageName: "EEC1", signal: signal("EngSpeed", 24, 16, 0.125, 0, "rpm", 0, 8031.875, 0) }],
     },
     {
-      id: "coolant", title: "Coolant", gaugeType: "radial", minimum: 20, maximum: 120, warning: 98, critical: 108, staleAfterMs: 3200,
+      id: "coolant", title: "Coolant", gaugeType: "temperature", minimum: 20, maximum: 120, warning: 98, critical: 108, staleAfterMs: 3200,
       sources: [{ sourceAddress: 0x00, pgn: 0xfeee, messageName: "ET1", signal: signal("EngCoolantTemp", 0, 8, 1, -40, "°C", -40, 210, 0) }],
     },
     {
-      id: "oil-pressure", title: "Oil pressure", gaugeType: "radial", minimum: 0, maximum: 600, staleAfterMs: 2200,
+      id: "oil-pressure", title: "Oil pressure", gaugeType: "pressure", minimum: 0, maximum: 600, staleAfterMs: 2200,
       sources: [{ sourceAddress: 0x00, pgn: 0xfeef, messageName: "EFL/P1", signal: signal("EngOilPress", 24, 8, 4, 0, "kPa", 0, 1000, 0) }],
     },
     {

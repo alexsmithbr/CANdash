@@ -24,8 +24,16 @@ code in Node.js. :)
 - Browser persistence plus JSON profile import/export and “Save as”
 - Custom PGN signals with DBC-style start bit, length, scale, and offset
 - Passive ECU and PGN discovery with one-click “Add gauge”
+- Browser-persisted DBC imports and DBC matches in Discover
+- Gauge editing plus temperature and pressure instruments
+- Scrolling line-history gauges with configurable time windows
+- Searchable DBC signal picker by signal, PGN, source address, and CAN ID
+- Per-gauge EMA and rolling-mean display smoothing
+- Session-long, time-weighted averages and ratio-of-integrals averages
+- Common and custom linear unit conversions
+- Safe formula gauges that reference other gauges by ID
 - Demo generator, timestamped candump replay, and live SocketCAN sources
-- Replay speed, pause/resume, progress, and looping
+- Replay speed, pause/resume, draggable timeline, progress, and looping
 - J1939 unavailable/error filtering and stale-value handling
 - Read-only DM1 decoding, including BAM transport reassembly
 - Disabled placeholder for future guarded fault clearing
@@ -98,6 +106,43 @@ Profiles are saved in browser local storage and can be exported as JSON. Export
 is the portable backup and sharing mechanism. The checked-in
 `reference/volare-profile-original.json` documents the earlier profile format;
 the running application exports its current schema.
+
+Imported DBC files are parsed locally and stored in browser IndexedDB. They are
+used to label matching PGNs in Discover and to populate the gauge editor. A
+gauge created from a DBC stores its own signal definition, so it continues to
+work if the DBC is later removed and remains portable in an exported profile.
+
+Display conversions run after signal decoding. Presets cover km/h to mph, km to
+miles, Celsius to Fahrenheit, kPa to psi, and litres/hour to US gallons/hour;
+custom linear scale and offset are also available.
+
+Formula gauges use existing gauge IDs in braces, for example:
+
+```text
+{vehicle-speed} / {fuel-rate}
+```
+
+Formula evaluation is restricted to arithmetic and the documented math
+functions in the editor. It does not execute JavaScript.
+
+Each gauge can optionally smooth its displayed value. Exponential moving
+average (EMA) is the recommended mode for fast-changing values; a 3–5 second
+period is a useful starting point for instantaneous fuel economy. Rolling mean
+is also available. Smoothing affects presentation, while the green update LED
+still pulses for every accepted update.
+
+The optional **Long AVG** is calculated from source-session start. Ordinary
+gauges use a time-weighted mean, avoiding bias from different CAN update rates.
+For a formula written exactly as `{numerator} / {denominator}`, the
+ratio-of-integrals mode accumulates both inputs independently. For example,
+integrating km/h and L/h produces total km divided by total litres, rather than
+the mathematically misleading mean of instantaneous km/L values. Long averages
+reset when a source starts or a replay is repositioned.
+
+Line-history gauges plot recent smoothed values over time, similar to a compact
+oscilloscope or TorquePro graph. Their time window is configurable from 1 to
+600 seconds. Profiles saved by version 0.3 with the former `histogram` type are
+rendered as line histories and are migrated when edited.
 
 The built-in values are capture-derived rather than OEM-authoritative. In
 particular, the project keeps the verified corrections for ET1 coolant

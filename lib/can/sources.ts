@@ -37,34 +37,37 @@ export class DemoSource {
 }
 
 export class ReplaySource {
-  private stopped = false;
   private paused = false;
+  private runId = 0;
 
-  async start(frames: CanFrame[], speed: number, loop: boolean, sink: FrameSink, onProgress: (current: number, total: number) => void) {
-    this.stopped = false;
+  async start(frames: CanFrame[], speed: number, loop: boolean, sink: FrameSink, onProgress: (current: number, total: number) => void, startIndex = 0) {
+    const runId = ++this.runId;
+    let firstIndex = Math.max(0, Math.min(frames.length - 1, startIndex));
     do {
       const wallStart = performance.now();
+      const captureStart = frames[firstIndex]?.timestamp ?? 0;
       let pauseStarted = 0;
       let pauseTotal = 0;
-      for (let index = 0; index < frames.length; index += 1) {
-        if (this.stopped) return;
-        while (this.paused && !this.stopped) {
+      for (let index = firstIndex; index < frames.length; index += 1) {
+        if (runId !== this.runId) return;
+        while (this.paused && runId === this.runId) {
           if (!pauseStarted) pauseStarted = performance.now();
           await new Promise((resolve) => setTimeout(resolve, 50));
         }
         if (pauseStarted) { pauseTotal += performance.now() - pauseStarted; pauseStarted = 0; }
-        const target = wallStart + pauseTotal + frames[index].timestamp / speed;
-        while (!this.stopped && performance.now() < target) await new Promise((resolve) => setTimeout(resolve, Math.min(20, target - performance.now())));
-        if (this.stopped) return;
+        const target = wallStart + pauseTotal + (frames[index].timestamp - captureStart) / speed;
+        while (runId === this.runId && performance.now() < target) await new Promise((resolve) => setTimeout(resolve, Math.min(20, target - performance.now())));
+        if (runId !== this.runId) return;
         sink({ ...frames[index], timestamp: performance.now() });
-        if (index % 250 === 0) onProgress(index, frames.length);
+        if (index % 100 === 0) onProgress(index, frames.length);
       }
-      onProgress(frames.length, frames.length);
-    } while (loop && !this.stopped);
+      onProgress(frames.length - 1, frames.length);
+      firstIndex = 0;
+    } while (loop && runId === this.runId);
   }
 
   setPaused(paused: boolean) { this.paused = paused; }
-  stop() { this.stopped = true; this.paused = false; }
+  stop() { this.runId += 1; this.paused = false; }
 }
 
 export class LiveSource {

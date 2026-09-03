@@ -1,6 +1,9 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { decodeDm1, decodeSignal, parseCandump, parseJ1939Id, TransportProtocolAssembler } from "../lib/can/j1939.ts";
+import { parseDbc } from "../lib/can/dbc.ts";
+import { evaluateFormula, formulaIsValid, formulaRatioReferences, formulaReferences } from "../lib/can/formula.ts";
+import { newAverageState, newSmoothingState, smoothValue, updateLongAverage } from "../lib/can/telemetry.ts";
 
 const signal = (startBit, length, scale, offset, minimum, maximum) => ({
   name: "test", startBit, length, scale, offset, minimum, maximum,
@@ -43,4 +46,50 @@ test("reassembles a BAM transport payload", () => {
   assert.equal(tp.ingest({ id: 0x18ecff00, data: [0x20, 8, 0, 2, 0xff, 0xca, 0xfe, 0], timestamp: 0 }), null);
   assert.equal(tp.ingest({ id: 0x18ebff00, data: [1, 1, 2, 3, 4, 5, 6, 7], timestamp: 1 }), null);
   assert.deepEqual(tp.ingest({ id: 0x18ebff00, data: [2, 8, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff], timestamp: 2 }), { pgn: 0xfeca, sourceAddress: 0, data: [1,2,3,4,5,6,7,8] });
+});
+
+test("parses an extended J1939 DBC message and its signals", () => {
+  const dbc = parseDbc(`BO_ ${0x98f004fe} EEC1: 8 Engine\n SG_ EngSpeed : 24|16@1+ (0.125,0) [0|8031.875] "rpm" Vector__XXX\n`, "test.dbc");
+  assert.equal(dbc.messages[0].pgn, 0xf004);
+  assert.equal(dbc.messages[0].sourceAddress, null);
+  assert.deepEqual(dbc.messages[0].signals[0], {
+    name: "EngSpeed", startBit: 24, length: 16, byteOrder: "little", signed: false,
+    scale: 0.125, offset: 0, unit: "rpm", minimum: 0, maximum: 8031.875,
+    decimals: 2, invalidPolicy: "j1939", receivers: ["Vector__XXX"],
+  });
+});
+
+test("evaluates formulas without executing JavaScript", () => {
+  const readings = {
+    "vehicle-speed": { value: 72, updatedAt: 1, sourceIndex: 0, pulse: 1 },
+    "fuel-rate": { value: 12, updatedAt: 1, sourceIndex: 0, pulse: 2 },
+  };
+  assert.deepEqual(formulaReferences("{vehicle-speed} / {fuel-rate}"), ["vehicle-speed", "fuel-rate"]);
+  assert.equal(evaluateFormula("round({vehicle-speed} / {fuel-rate})", readings), 6);
+  assert.equal(formulaIsValid("sqrt({vehicle-speed} - 100)"), true);
+  assert.equal(formulaIsValid("{vehicle-speed} +"), false);
+  assert.deepEqual(formulaRatioReferences("{vehicle-speed} / {fuel-rate}"), ["vehicle-speed", "fuel-rate"]);
+  assert.equal(formulaRatioReferences("2 * {vehicle-speed} / {fuel-rate}"), null);
+  assert.equal(evaluateFormula("globalThis.alert(1)", readings), null);
+});
+
+test("smooths noisy readings with a time-based EMA", () => {
+  const state = newSmoothingState();
+  assert.equal(smoothValue(10, 0, { method: "ema", windowMs: 3000 }, state), 10);
+  const value = smoothValue(20, 3000, { method: "ema", windowMs: 3000 }, state);
+  assert.ok(Math.abs(value - 16.321205588) < 0.000001);
+});
+
+test("computes time-weighted and ratio-of-integrals long averages", () => {
+  const mean = newAverageState();
+  const definition = { enabled: true, method: "time-weighted" };
+  assert.equal(updateLongAverage(10, 0, definition, mean, 3000), 10);
+  assert.equal(updateLongAverage(20, 1000, definition, mean, 3000), 10);
+  assert.equal(updateLongAverage(30, 2000, definition, mean, 3000), 15);
+
+  const ratio = newAverageState();
+  const ratioDefinition = { enabled: true, method: "ratio-of-integrals" };
+  assert.equal(updateLongAverage(10, 0, ratioDefinition, ratio, 3000, [60, 6]), 10);
+  assert.equal(updateLongAverage(5, 1000, ratioDefinition, ratio, 3000, [30, 6]), 10);
+  assert.equal(updateLongAverage(5, 2000, ratioDefinition, ratio, 3000, [30, 6]), 7.5);
 });
