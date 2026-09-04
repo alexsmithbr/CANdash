@@ -3,7 +3,8 @@ import test from "node:test";
 import { decodeDm1, decodeSignal, parseCandump, parseJ1939Id, TransportProtocolAssembler } from "../lib/can/j1939.ts";
 import { parseDbc } from "../lib/can/dbc.ts";
 import { evaluateFormula, formulaIsValid, formulaRatioReferences, formulaReferences } from "../lib/can/formula.ts";
-import { newAverageState, newSmoothingState, smoothValue, updateLongAverage } from "../lib/can/telemetry.ts";
+import { newAverageState, newSmoothingState, newStatisticsState, smoothValue, updateLongAverage, updateStatistics } from "../lib/can/telemetry.ts";
+import { normalizedStatisticsDisplay } from "../lib/can/statistics-display.ts";
 
 const signal = (startBit, length, scale, offset, minimum, maximum) => ({
   name: "test", startBit, length, scale, offset, minimum, maximum,
@@ -61,16 +62,24 @@ test("parses an extended J1939 DBC message and its signals", () => {
 
 test("evaluates formulas without executing JavaScript", () => {
   const readings = {
-    "vehicle-speed": { value: 72, updatedAt: 1, sourceIndex: 0, pulse: 1 },
-    "fuel-rate": { value: 12, updatedAt: 1, sourceIndex: 0, pulse: 2 },
+    "vehicle-speed": { value: 72, statistics: { minimum: 0, average: 60, maximum: 90, sampleCount: 3 }, updatedAt: 1, sourceIndex: 0, pulse: 1 },
+    "fuel-rate": { value: 12, statistics: { minimum: 0, average: 6, maximum: 14, sampleCount: 3 }, updatedAt: 1, sourceIndex: 0, pulse: 2 },
   };
   assert.deepEqual(formulaReferences("{vehicle-speed} / {fuel-rate}"), ["vehicle-speed", "fuel-rate"]);
   assert.equal(evaluateFormula("round({vehicle-speed} / {fuel-rate})", readings), 6);
+  assert.equal(evaluateFormula("AVG({vehicle-speed}) / AVG({fuel-rate})", readings), 10);
+  assert.equal(formulaIsValid("AVG({vehicle-speed}) / AVG({fuel-rate})"), true);
   assert.equal(formulaIsValid("sqrt({vehicle-speed} - 100)"), true);
   assert.equal(formulaIsValid("{vehicle-speed} +"), false);
   assert.deepEqual(formulaRatioReferences("{vehicle-speed} / {fuel-rate}"), ["vehicle-speed", "fuel-rate"]);
   assert.equal(formulaRatioReferences("2 * {vehicle-speed} / {fuel-rate}"), null);
   assert.equal(evaluateFormula("globalThis.alert(1)", readings), null);
+});
+
+test("keeps zero readings valid while rejecting division by zero", () => {
+  const readings = { "fuel-rate": { value: 0, statistics: { minimum: 0, average: 0, maximum: 0, sampleCount: 1 }, updatedAt: 1, sourceIndex: 0, pulse: 1 } };
+  assert.equal(evaluateFormula("{fuel-rate}", readings), 0);
+  assert.equal(evaluateFormula("1 / {fuel-rate}", readings), null);
 });
 
 test("smooths noisy readings with a time-based EMA", () => {
@@ -92,4 +101,34 @@ test("computes time-weighted and ratio-of-integrals long averages", () => {
   assert.equal(updateLongAverage(10, 0, ratioDefinition, ratio, 3000, [60, 6]), 10);
   assert.equal(updateLongAverage(5, 1000, ratioDefinition, ratio, 3000, [30, 6]), 10);
   assert.equal(updateLongAverage(5, 2000, ratioDefinition, ratio, 3000, [30, 6]), 7.5);
+});
+
+test("tracks session minimum, maximum, and a time-weighted average including zero", () => {
+  const state = newStatisticsState();
+  assert.deepEqual(updateStatistics(10, 0, state, 3000), { minimum: 10, average: 10, maximum: 10, sampleCount: 1 });
+  assert.deepEqual(updateStatistics(0, 1000, state, 3000), { minimum: 0, average: 10, maximum: 10, sampleCount: 2 });
+  assert.deepEqual(updateStatistics(20, 2000, state, 3000), { minimum: 0, average: 5, maximum: 20, sampleCount: 3 });
+});
+
+test("keeps v0.5 statistics profiles compatible with configurable markers", () => {
+  assert.deepEqual(normalizedStatisticsDisplay({ showStatistics: true }), {
+    enabled: true,
+    showMinimum: true,
+    showAverage: true,
+    showMaximum: true,
+    showValues: true,
+  });
+  assert.deepEqual(normalizedStatisticsDisplay({ showStatistics: true, statisticsDisplay: {
+    enabled: false,
+    showMinimum: false,
+    showAverage: true,
+    showMaximum: false,
+    showValues: false,
+  } }), {
+    enabled: false,
+    showMinimum: false,
+    showAverage: true,
+    showMaximum: false,
+    showValues: false,
+  });
 });

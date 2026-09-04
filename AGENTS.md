@@ -35,6 +35,8 @@ Do not commit `node_modules/`, `dist/`, `.sites-runtime/`, `.wrangler/`, Python 
 - Unit conversion happens after DBC/raw signal decoding.
 - Smoothing affects display values; preserve unsmoothed values for formulas and long-term statistics.
 - Use time-weighted averages for irregular updates. Fuel-economy averages should use ratio-of-integrals, not the mean of instantaneous ratios.
+- Treat numeric zero as a valid, fresh reading. Keep formula liveness separate from whether an expression currently has a finite result.
+- `AVG({gauge-id})` resolves to that dependency's session time-weighted average; keep aggregate functions inside the safe formula parser.
 - Treat J1939 unavailable/error encodings as missing values unless a gauge explicitly disables that policy.
 - Preserve existing profile IDs when editing gauges, because formulas refer to gauges by ID.
 
@@ -45,4 +47,5 @@ Do not commit `node_modules/`, `dist/`, `.sites-runtime/`, `.wrangler/`, Python 
 - Stale or unavailable values display as an em dash, not a misleading number.
 - Editing a gauge must not silently remove its fallback sources.
 - Keep the line-history gauge time-based; do not treat irregular CAN updates as evenly spaced samples.
+- Replay pause must freeze the logical dashboard clock, not merely stop incoming frames.
 - Preserve the legacy `histogram` gauge type as a read-compatible alias for `history`.

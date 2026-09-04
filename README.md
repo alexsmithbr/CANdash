@@ -30,10 +30,11 @@ code in Node.js. :)
 - Searchable DBC signal picker by signal, PGN, source address, and CAN ID
 - Per-gauge EMA and rolling-mean display smoothing
 - Session-long, time-weighted averages and ratio-of-integrals averages
+- Optional per-gauge session MIN, time-weighted AVG, and MAX arc markers
 - Common and custom linear unit conversions
-- Safe formula gauges that reference other gauges by ID
+- Safe formula gauges using current values or `AVG({gauge-id})` session values
 - Demo generator, timestamped candump replay, and live SocketCAN sources
-- Replay speed, pause/resume, draggable timeline, progress, and looping
+- Replay speed in the main timeline, exact pause/resume freezing, seeking, progress, and looping
 - J1939 unavailable/error filtering and stale-value handling
 - Read-only DM1 decoding, including BAM transport reassembly
 - Disabled placeholder for future guarded fault clearing
@@ -125,6 +126,17 @@ Formula gauges use existing gauge IDs in braces, for example:
 Formula evaluation is restricted to arithmetic and the documented math
 functions in the editor. It does not execute JavaScript.
 
+Use `AVG({gauge-id})` to reference a source gauge's session-long,
+time-weighted average inside a formula. For example:
+
+```text
+AVG({vehicle-speed}) / AVG({fuel-rate})
+```
+
+Zero is retained as a valid, fresh CAN reading. If an expression is not
+numerically defined—such as division by a current zero fuel rate—the calculated
+gauge stays live but displays an em dash instead of its previous value.
+
 Each gauge can optionally smooth its displayed value. Exponential moving
 average (EMA) is the recommended mode for fast-changing values; a 3–5 second
 period is a useful starting point for instantaneous fuel economy. Rolling mean
@@ -139,10 +151,22 @@ integrating km/h and L/h produces total km divided by total litres, rather than
 the mathematically misleading mean of instantaneous km/L values. Long averages
 reset when a source starts or a replay is repositioned.
 
+Circular gauges can place session minimum, time-weighted average, and maximum
+markers directly across their dial arc at the corresponding values. The gauge
+editor has a master switch plus independent MIN, AVG, and MAX switches. Marker
+labels remain visible when their numeric values are hidden. MIN and MAX use
+yellow strokes; AVG uses blue. Profiles created by version 0.5 with the former
+single statistics switch are read as all three markers and values enabled.
+
 Line-history gauges plot recent smoothed values over time, similar to a compact
 oscilloscope or TorquePro graph. Their time window is configurable from 1 to
 600 seconds. Profiles saved by version 0.3 with the former `histogram` type are
 rendered as line histories and are migrated when edited.
+
+Replay pause freezes the dashboard's logical clock. Gauge values, freshness,
+statistics, history, and update indicators therefore remain exactly where they
+were until playback resumes. Playback speed can be changed directly in the
+timeline while replay is running.
 
 The built-in values are capture-derived rather than OEM-authoritative. In
 particular, the project keeps the verified corrections for ET1 coolant

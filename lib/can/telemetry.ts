@@ -1,4 +1,4 @@
-import type { LongAverageDefinition, SmoothingDefinition } from "./types";
+import type { GaugeStatistics, LongAverageDefinition, SmoothingDefinition } from "./types";
 
 export type SmoothingState = {
   lastTimestamp?: number;
@@ -17,12 +17,47 @@ export type AverageState = {
   denominatorIntegral: number;
 };
 
+export type StatisticsState = {
+  lastTimestamp?: number;
+  lastValue?: number;
+  weightedSum: number;
+  duration: number;
+  minimum?: number;
+  maximum?: number;
+  sampleCount: number;
+};
+
 export function newSmoothingState(): SmoothingState {
   return { samples: [] };
 }
 
 export function newAverageState(): AverageState {
   return { weightedSum: 0, duration: 0, numeratorIntegral: 0, denominatorIntegral: 0 };
+}
+
+export function newStatisticsState(): StatisticsState {
+  return { weightedSum: 0, duration: 0, sampleCount: 0 };
+}
+
+export function updateStatistics(value: number, timestamp: number, state: StatisticsState, maximumGapMs: number): GaugeStatistics {
+  if (state.lastTimestamp != null && state.lastValue != null) {
+    const elapsed = timestamp - state.lastTimestamp;
+    if (elapsed > 0 && elapsed <= maximumGapMs * 2) {
+      state.weightedSum += state.lastValue * elapsed;
+      state.duration += elapsed;
+    }
+  }
+  state.lastTimestamp = timestamp;
+  state.lastValue = value;
+  state.minimum = state.minimum == null ? value : Math.min(state.minimum, value);
+  state.maximum = state.maximum == null ? value : Math.max(state.maximum, value);
+  state.sampleCount += 1;
+  return {
+    minimum: state.minimum,
+    average: state.duration > 0 ? state.weightedSum / state.duration : value,
+    maximum: state.maximum,
+    sampleCount: state.sampleCount,
+  };
 }
 
 export function smoothValue(value: number, timestamp: number, definition: SmoothingDefinition | undefined, state: SmoothingState) {

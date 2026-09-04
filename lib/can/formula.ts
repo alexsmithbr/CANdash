@@ -1,6 +1,6 @@
 import type { GaugeReading } from "./types";
 
-type Token = { type: "number" | "reference" | "operator" | "function" | "left" | "right" | "comma"; value: string };
+type Token = { type: "number" | "reference" | "operator" | "function" | "left" | "right" | "comma"; value: string; aggregate?: "average" };
 const OPERATORS: Record<string, { precedence: number; right: boolean; arity: number }> = {
   "+": { precedence: 1, right: false, arity: 2 }, "-": { precedence: 1, right: false, arity: 2 },
   "*": { precedence: 2, right: false, arity: 2 }, "/": { precedence: 2, right: false, arity: 2 }, "%": { precedence: 2, right: false, arity: 2 },
@@ -19,6 +19,8 @@ function tokenize(expression: string): Token[] {
   while (index < expression.length) {
     const rest = expression.slice(index);
     const whitespace = rest.match(/^\s+/); if (whitespace) { index += whitespace[0].length; continue; }
+    const averageReference = rest.match(/^AVG\s*\(\s*\{([^{}]+)\}\s*\)/i);
+    if (averageReference) { tokens.push({ type: "reference", value: averageReference[1].trim(), aggregate: "average" }); index += averageReference[0].length; continue; }
     const number = rest.match(/^(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?/i);
     if (number) { tokens.push({ type: "number", value: number[0] }); index += number[0].length; continue; }
     const reference = rest.match(/^\{([^{}]+)\}/);
@@ -96,7 +98,9 @@ export function evaluateFormula(expression: string, readings: Record<string, Gau
     for (const token of toPostfix(tokenize(expression))) {
       if (token.type === "number") stack.push(Number(token.value));
       else if (token.type === "reference") {
-        const value = readings[token.value]?.value; if (!Number.isFinite(value)) return null; stack.push(value);
+        const reading = readings[token.value];
+        const value = token.aggregate === "average" ? reading?.statistics?.average : reading?.value;
+        if (typeof value !== "number" || !Number.isFinite(value)) return null; stack.push(value);
       } else if (token.type === "operator") {
         const operator = OPERATORS[token.value]; if (stack.length < operator.arity) return null;
         const args = stack.splice(-operator.arity);

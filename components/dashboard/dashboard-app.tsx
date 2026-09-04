@@ -11,7 +11,7 @@ import { dbcSignalSources, deleteDbcDatabase, loadDbcDatabases, saveDbcDatabase 
 import { evaluateFormula, formulaRatioReferences, formulaReferences } from "@/lib/can/formula";
 import { cloneProfile, DEFAULT_PROFILE } from "@/lib/can/profile";
 import { DemoSource, LiveSource, ReplaySource } from "@/lib/can/sources";
-import { newAverageState, newSmoothingState, smoothValue, updateLongAverage } from "@/lib/can/telemetry";
+import { newAverageState, newSmoothingState, newStatisticsState, smoothValue, updateLongAverage, updateStatistics } from "@/lib/can/telemetry";
 import type { CanFrame, DashboardProfile, DbcDatabase, DiagnosticFault, DiscoveryEntry, GaugeDefinition, GaugeHistoryPoint, GaugeReading } from "@/lib/can/types";
 import { DbcDialog } from "./dbc-dialog";
 import { DiscoveryView } from "./discovery-view";
@@ -45,6 +45,7 @@ export function DashboardApp() {
   const historiesRef = useRef<Record<string, GaugeHistoryPoint[]>>({});
   const smoothingRef = useRef(new Map<string, ReturnType<typeof newSmoothingState>>());
   const averagesRef = useRef(new Map<string, ReturnType<typeof newAverageState>>());
+  const statisticsRef = useRef(new Map<string, ReturnType<typeof newStatisticsState>>());
   const [discovery, setDiscovery] = useState<DiscoveryEntry[]>([]);
   const discoveryRef = useRef(new Map<string, DiscoveryEntry>());
   const [faults, setFaults] = useState<DiagnosticFault[]>([]);
@@ -82,6 +83,12 @@ export function DashboardApp() {
   const replayInputRef = useRef<HTMLInputElement>(null);
   const profileInputRef = useRef<HTMLInputElement>(null);
   const replaySessionRef = useRef(0);
+  const sessionClockRef = useRef({ pausedAt: null as number | null, pausedTotal: 0 });
+
+  const sessionNow = useCallback(() => {
+    const clock = sessionClockRef.current;
+    return (clock.pausedAt ?? performance.now()) - clock.pausedTotal;
+  }, []);
 
   useEffect(() => { profileRef.current = activeProfile; }, [activeProfile]);
   useEffect(() => {
@@ -101,14 +108,14 @@ export function DashboardApp() {
 
   useEffect(() => {
     const timer = setInterval(() => {
-      const instant = performance.now();
+      const instant = sessionNow();
       setNow(instant);
       const elapsed = Math.max(0.001, (instant - sessionStartRef.current) / 1000);
       setFrameStats({ frames: frameCountRef.current, fps: sessionStartRef.current ? frameCountRef.current / elapsed : 0, startedAt: sessionStartRef.current });
       setDiscovery(Array.from(discoveryRef.current.values()).map((entry) => ({ ...entry, rate: entry.count / Math.max(0.001, (entry.lastSeen - entry.firstSeen) / 1000) })).sort((a, b) => b.count - a.count));
     }, 500);
     return () => clearInterval(timer);
-  }, []);
+  }, [sessionNow]);
 
   const scheduleReadingRender = useCallback(() => {
     if (renderPendingRef.current) return;
@@ -121,9 +128,12 @@ export function DashboardApp() {
     if (!smoothing) { smoothing = newSmoothingState(); smoothingRef.current.set(gauge.id, smoothing); }
     let average = averagesRef.current.get(gauge.id);
     if (!average) { average = newAverageState(); averagesRef.current.set(gauge.id, average); }
+    let statistics = statisticsRef.current.get(gauge.id);
+    if (!statistics) { statistics = newStatisticsState(); statisticsRef.current.set(gauge.id, statistics); }
     const value = smoothValue(rawValue, instant, gauge.smoothing, smoothing);
     const longAverage = updateLongAverage(rawValue, instant, gauge.longAverage, average, gauge.staleAfterMs, ratio);
-    readingsRef.current[gauge.id] = { value, rawValue, longAverage, updatedAt: instant, sourceIndex, pulse: ++pulseRef.current, dependencyPulse };
+    const sessionStatistics = updateStatistics(rawValue, instant, statistics, gauge.staleAfterMs);
+    readingsRef.current[gauge.id] = { value, rawValue, longAverage, statistics: sessionStatistics, updatedAt: instant, sourceIndex, pulse: ++pulseRef.current, dependencyPulse };
     if (gauge.gaugeType !== "history" && gauge.gaugeType !== "histogram") return;
     const windowMs = Math.max(1000, gauge.historyWindowMs ?? 30000);
     const previous = historiesRef.current[gauge.id] ?? [];
@@ -135,6 +145,19 @@ export function DashboardApp() {
     historiesRef.current = { ...historiesRef.current, [gauge.id]: points };
   }, []);
 
+  const acceptUnavailableFormula = useCallback((gauge: GaugeDefinition, instant: number, dependencyPulse: string) => {
+    const previous = readingsRef.current[gauge.id];
+    readingsRef.current[gauge.id] = {
+      value: null,
+      longAverage: previous?.longAverage,
+      statistics: previous?.statistics,
+      updatedAt: instant,
+      sourceIndex: 0,
+      pulse: ++pulseRef.current,
+      dependencyPulse,
+    };
+  }, []);
+
   const registerFaults = useCallback((next: DiagnosticFault[]) => {
     if (!next.length) return;
     next.forEach((fault) => faultsRef.current.set(fault.key, fault));
@@ -142,7 +165,7 @@ export function DashboardApp() {
   }, []);
 
   const handleFrame = useCallback((frame: CanFrame) => {
-    const instant = performance.now();
+    const instant = sessionNow();
     frameCountRef.current += 1;
     const info = parseJ1939Id(frame.id);
     const key = `${info.sourceAddress}-${info.pgn}`;
@@ -173,36 +196,47 @@ export function DashboardApp() {
       const dependencyPulse = dependencies.map((id) => readingsRef.current[id]?.pulse ?? 0).join(":");
       if (!dependencies.length || dependencies.some((id) => !readingsRef.current[id]) || readingsRef.current[gauge.id]?.dependencyPulse === dependencyPulse) continue;
       const value = evaluateFormula(gauge.formula!.expression, readingsRef.current);
-      if (value == null || value < gauge.minimum || gauge.maximum != null && value > gauge.maximum) continue;
       const updatedAt = Math.max(...dependencies.map((id) => readingsRef.current[id].updatedAt));
+      if (value == null) { acceptUnavailableFormula(gauge, updatedAt, dependencyPulse); continue; }
+      if (value < gauge.minimum || gauge.maximum != null && value > gauge.maximum) continue;
       const ratioReferences = gauge.longAverage?.method === "ratio-of-integrals" ? formulaRatioReferences(gauge.formula!.expression) : null;
       const ratio = ratioReferences ? ratioReferences.map((id) => readingsRef.current[id].rawValue ?? readingsRef.current[id].value) as [number, number] : undefined;
       acceptGaugeReading(gauge, value, updatedAt, 0, dependencyPulse, ratio);
     }
     scheduleReadingRender();
-  }, [acceptGaugeReading, registerFaults, scheduleReadingRender]);
+  }, [acceptGaugeReading, acceptUnavailableFormula, registerFaults, scheduleReadingRender, sessionNow]);
+
+  function resetSessionClock() {
+    sessionClockRef.current = { pausedAt: null, pausedTotal: 0 };
+    setReplayPaused(false);
+    setNow(performance.now());
+  }
 
   function clearSession() {
-    frameCountRef.current = 0; sessionStartRef.current = performance.now();
-    readingsRef.current = {}; historiesRef.current = {}; smoothingRef.current.clear(); averagesRef.current.clear(); discoveryRef.current.clear(); faultsRef.current.clear(); transportRef.current = new TransportProtocolAssembler();
+    frameCountRef.current = 0; sessionStartRef.current = sessionNow();
+    readingsRef.current = {}; historiesRef.current = {}; smoothingRef.current.clear(); averagesRef.current.clear(); statisticsRef.current.clear(); discoveryRef.current.clear(); faultsRef.current.clear(); transportRef.current = new TransportProtocolAssembler();
     setReadings({}); setHistories({}); setDiscovery([]); setFaults([]); setReplayProgress({ current: 0, total: replayFrames.length });
   }
 
-  function stopSources(updateState = true) {
+  const stopSources = useCallback((updateState = true) => {
+    const wallNow = performance.now();
+    const clock = sessionClockRef.current;
+    if (clock.pausedAt != null) { clock.pausedTotal += wallNow - clock.pausedAt; clock.pausedAt = null; }
     replaySessionRef.current += 1; demoRef.current.stop(); replayRef.current.stop(); liveRef.current.disconnect(); setReplayPaused(false);
+    setNow(sessionNow());
     if (updateState) setSourceState({ mode: "off", status: "idle", label: "No source" });
-  }
+  }, [sessionNow]);
 
-  useEffect(() => () => stopSources(false), []);
+  useEffect(() => () => stopSources(false), [stopSources]);
 
   function startDemo() {
-    stopSources(false); clearSession(); demoRef.current.start(handleFrame);
+    stopSources(false); resetSessionClock(); clearSession(); demoRef.current.start(handleFrame);
     setSourceState({ mode: "demo", status: "running", label: "Demo generator" }); setSourceOpen(false);
   }
 
   function startReplay(startIndex = 0) {
     if (!replayFrames.length) return;
-    stopSources(false); clearSession(); setReplayPaused(false);
+    stopSources(false); resetSessionClock(); clearSession();
     setReplayProgress({ current: startIndex, total: replayFrames.length });
     setSourceState({ mode: "replay", status: "running", label: replayFile || "candump replay" }); setSourceOpen(false);
     const session = ++replaySessionRef.current;
@@ -217,12 +251,30 @@ export function DashboardApp() {
   }
 
   function toggleReplayPause() {
-    const paused = !replayPaused; setReplayPaused(paused); replayRef.current.setPaused(paused);
+    const paused = !replayPaused;
+    const wallNow = performance.now();
+    const clock = sessionClockRef.current;
+    if (paused && clock.pausedAt == null) clock.pausedAt = wallNow;
+    if (!paused && clock.pausedAt != null) { clock.pausedTotal += wallNow - clock.pausedAt; clock.pausedAt = null; }
+    setNow(sessionNow()); setReplayPaused(paused); replayRef.current.setPaused(paused);
     setSourceState((state) => state.mode === "replay" ? { ...state, status: paused ? "paused" : "running" } : state);
   }
 
+  function pauseReplay() {
+    if (replayPaused) return;
+    const wallNow = performance.now();
+    sessionClockRef.current.pausedAt = wallNow;
+    setNow(sessionNow()); setReplayPaused(true); replayRef.current.setPaused(true);
+    setSourceState((state) => state.mode === "replay" ? { ...state, status: "paused" } : state);
+  }
+
+  function changeReplaySpeed(speed: number) {
+    setReplaySpeed(speed);
+    replayRef.current.setSpeed(speed);
+  }
+
   function connectLive() {
-    stopSources(false); clearSession();
+    stopSources(false); resetSessionClock(); clearSession();
     liveRef.current.connect(liveUrl, handleFrame, (status) => setSourceState({ mode: "live", status, label: liveUrl }));
     setSourceOpen(false);
   }
@@ -248,7 +300,7 @@ export function DashboardApp() {
       const index = profile.gauges.findIndex((item) => item.id === gauge.id);
       if (index < 0) profile.gauges.push(gauge); else profile.gauges[index] = gauge;
     });
-    delete readingsRef.current[gauge.id]; delete historiesRef.current[gauge.id]; smoothingRef.current.delete(gauge.id); averagesRef.current.delete(gauge.id); setReadings({ ...readingsRef.current }); setHistories({ ...historiesRef.current }); setSelectedGaugeId(undefined); setView("dashboard");
+    delete readingsRef.current[gauge.id]; delete historiesRef.current[gauge.id]; smoothingRef.current.delete(gauge.id); averagesRef.current.delete(gauge.id); statisticsRef.current.delete(gauge.id); setReadings({ ...readingsRef.current }); setHistories({ ...historiesRef.current }); setSelectedGaugeId(undefined); setView("dashboard");
   }
   function removeGauge(id: string) { mutateActive((profile) => { profile.gauges = profile.gauges.filter((gauge) => gauge.id !== id); }); }
   function moveGauge(index: number, direction: -1 | 1) { mutateActive((profile) => { const target = Math.max(0, Math.min(profile.gauges.length - 1, index + direction)); const [item] = profile.gauges.splice(index, 1); profile.gauges.splice(target, 0, item); }); }
@@ -309,19 +361,19 @@ export function DashboardApp() {
       <div className="mx-auto max-w-[1600px] px-4 py-5 lg:px-6">
         <div className="mb-5 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
           <div><p className="mb-1 font-mono text-[10px] uppercase tracking-[.16em] text-primary">{view === "dashboard" ? "Instrument panel" : view === "discover" ? "Network inventory" : "Diagnostics"}</p><h1 className="text-2xl font-semibold tracking-tight">{view === "dashboard" ? activeProfile.name : view === "discover" ? "Observed ECUs & PGNs" : "Active diagnostic messages"}</h1><p className="mt-1 max-w-2xl text-xs leading-5 text-muted-foreground">{view === "dashboard" ? activeProfile.description : view === "discover" ? "Listening is passive. Add any observed source-address/PGN pair to the active profile." : "Monitor DM1 traffic without transmitting onto the vehicle network."}</p></div>
-          {view === "dashboard" && <div className="flex flex-wrap items-center gap-2"><select value={activeProfile.id} onChange={(e) => { setActiveProfileId(e.target.value); readingsRef.current = {}; historiesRef.current = {}; smoothingRef.current.clear(); averagesRef.current.clear(); setReadings({}); setHistories({}); }} className="h-9 max-w-64 rounded-md border bg-card px-3 text-sm">{profiles.map((profile) => <option key={profile.id} value={profile.id}>{profile.name}</option>)}</select><Button size="sm" variant="outline" onClick={() => { setProfileName(`${activeProfile.name} copy`); setProfileOpen(true); }}><Save /> Save as</Button><Button size="sm" variant="outline" onClick={() => setDbcOpen(true)}><Database /> DBC <span className="text-muted-foreground">{databases.length}</span></Button><Button size="sm" variant="outline" onClick={() => { setSelectedPair(undefined); setSelectedGaugeId(undefined); setGaugeOpen(true); }}><Plus /> Gauge</Button><div className="flex h-9 items-center gap-2 rounded-md border bg-card px-3"><Settings2 className="size-3.5 text-muted-foreground" /><span className="text-xs">Edit</span><Switch size="sm" checked={editing} onCheckedChange={setEditing} /></div></div>}
+          {view === "dashboard" && <div className="flex flex-wrap items-center gap-2"><select value={activeProfile.id} onChange={(e) => { setActiveProfileId(e.target.value); readingsRef.current = {}; historiesRef.current = {}; smoothingRef.current.clear(); averagesRef.current.clear(); statisticsRef.current.clear(); setReadings({}); setHistories({}); }} className="h-9 max-w-64 rounded-md border bg-card px-3 text-sm">{profiles.map((profile) => <option key={profile.id} value={profile.id}>{profile.name}</option>)}</select><Button size="sm" variant="outline" onClick={() => { setProfileName(`${activeProfile.name} copy`); setProfileOpen(true); }}><Save /> Save as</Button><Button size="sm" variant="outline" onClick={() => setDbcOpen(true)}><Database /> DBC <span className="text-muted-foreground">{databases.length}</span></Button><Button size="sm" variant="outline" onClick={() => { setSelectedPair(undefined); setSelectedGaugeId(undefined); setGaugeOpen(true); }}><Plus /> Gauge</Button><div className="flex h-9 items-center gap-2 rounded-md border bg-card px-3"><Settings2 className="size-3.5 text-muted-foreground" /><span className="text-xs">Edit</span><Switch size="sm" checked={editing} onCheckedChange={setEditing} /></div></div>}
         </div>
 
         {view === "dashboard" && (
           <section className="grid auto-rows-min grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
-            {activeProfile.gauges.map((gauge, index) => <GaugeCard key={gauge.id} gauge={gauge} reading={readings[gauge.id]} history={histories[gauge.id] ?? []} now={now} editing={editing} onMove={(direction) => moveGauge(index, direction)} onEdit={() => { setSelectedPair(undefined); setSelectedGaugeId(gauge.id); setGaugeOpen(true); }} onRemove={() => removeGauge(gauge.id)} />)}
+            {activeProfile.gauges.map((gauge, index) => <GaugeCard key={gauge.id} gauge={gauge} reading={readings[gauge.id]} history={histories[gauge.id] ?? []} now={now} paused={sourceState.mode === "replay" && replayPaused} editing={editing} onMove={(direction) => moveGauge(index, direction)} onEdit={() => { setSelectedPair(undefined); setSelectedGaugeId(gauge.id); setGaugeOpen(true); }} onRemove={() => removeGauge(gauge.id)} />)}
             {!activeProfile.gauges.length && <button onClick={() => setGaugeOpen(true)} className="col-span-full rounded-xl border border-dashed p-16 text-center text-sm text-muted-foreground hover:border-primary/50 hover:text-primary"><Plus className="mx-auto mb-3 size-6" />Add the first gauge to this profile</button>}
           </section>
         )}
         {view === "discover" && <DiscoveryView entries={discovery} databases={databases} filter={filter} onFilter={setFilter} onAdd={(entry) => { setSelectedGaugeId(undefined); setSelectedPair(entry); setGaugeOpen(true); }} />}
         {view === "faults" && <FaultsView faults={faults} />}
 
-        {sourceState.mode === "replay" && replayFrames.length > 0 && <section className="mt-4 rounded-xl border bg-card/80 p-4" aria-label="Replay timeline"><div className="mb-3 flex items-center justify-between gap-3"><div><p className="text-xs font-medium">{replayFile}</p><p className="font-mono text-[10px] text-muted-foreground">{(replayTime / 1000).toFixed(1)}s / {(replayDuration / 1000).toFixed(1)}s · frame {Math.min(replayProgress.current + 1, replayFrames.length).toLocaleString()} of {replayFrames.length.toLocaleString()}</p></div><Button size="sm" variant="outline" onClick={toggleReplayPause}>{replayPaused ? <Play /> : <Pause />}{replayPaused ? "Resume" : "Pause"}</Button></div><input type="range" min="0" max={Math.max(0, replayFrames.length - 1)} value={Math.min(replayProgress.current, Math.max(0, replayFrames.length - 1))} onPointerDown={() => { replayRef.current.setPaused(true); setReplayPaused(true); setSourceState((state) => ({ ...state, status: "paused" })); }} onChange={(event) => setReplayProgress({ current: Number(event.target.value), total: replayFrames.length })} onPointerUp={(event) => seekReplay(Number(event.currentTarget.value))} onKeyUp={(event) => seekReplay(Number(event.currentTarget.value))} className="w-full accent-primary" aria-label="Replay position" /></section>}
+        {sourceState.mode === "replay" && replayFrames.length > 0 && <section className="mt-4 rounded-xl border bg-card/80 p-4" aria-label="Replay timeline"><div className="mb-3 flex flex-wrap items-center justify-between gap-3"><div><p className="text-xs font-medium">{replayFile}</p><p className="font-mono text-[10px] text-muted-foreground">{(replayTime / 1000).toFixed(1)}s / {(replayDuration / 1000).toFixed(1)}s · frame {Math.min(replayProgress.current + 1, replayFrames.length).toLocaleString()} of {replayFrames.length.toLocaleString()}</p></div><div className="flex items-center gap-2"><label className="flex h-8 items-center gap-2 rounded-md border bg-background px-2 text-[10px] uppercase tracking-[.1em] text-muted-foreground">Speed<select value={replaySpeed} onChange={(event) => changeReplaySpeed(Number(event.target.value))} className="bg-transparent font-mono text-xs text-foreground outline-none" aria-label="Replay speed"><option value={0.25}>0.25×</option><option value={0.5}>0.5×</option><option value={1}>1×</option><option value={2}>2×</option><option value={4}>4×</option><option value={10}>10×</option><option value={50}>50×</option></select></label><Button size="sm" variant="outline" onClick={toggleReplayPause}>{replayPaused ? <Play /> : <Pause />}{replayPaused ? "Resume" : "Pause"}</Button></div></div><input type="range" min="0" max={Math.max(0, replayFrames.length - 1)} value={Math.min(replayProgress.current, Math.max(0, replayFrames.length - 1))} onPointerDown={pauseReplay} onChange={(event) => setReplayProgress({ current: Number(event.target.value), total: replayFrames.length })} onPointerUp={(event) => seekReplay(Number(event.currentTarget.value))} onKeyUp={(event) => seekReplay(Number(event.currentTarget.value))} className="w-full accent-primary" aria-label="Replay position" /></section>}
 
         <footer className="mt-6 flex flex-col gap-3 border-t py-4 text-[10px] uppercase tracking-[.1em] text-muted-foreground sm:flex-row sm:items-center sm:justify-between"><div className="flex items-center gap-4"><span>Source: <b className="font-medium text-foreground">{sourceState.mode} / {sourceState.status}</b></span><span>Bitrate: <b className="font-medium text-foreground">{activeProfile.network.bitrate / 1000} kbit/s</b></span><span className="text-primary">Listen-only default</span></div><div>{sourceState.mode === "replay" ? `${replayPercent}% · ${Math.min(replayProgress.current + 1, replayProgress.total).toLocaleString()}/${replayProgress.total.toLocaleString()} frames` : `Profile ${activeProfile.schemaVersion}.0 · ${activeProfile.gauges.length} gauges`}</div></footer>
       </div>
@@ -336,7 +388,7 @@ export function DashboardApp() {
           <input ref={replayInputRef} type="file" accept=".log,.txt" className="hidden" onChange={chooseReplay} />
           <div className="space-y-4 rounded-xl border bg-muted/20 p-4">
             <div><div className="flex items-center justify-between"><p className="text-xs font-medium">Replay file</p><span className="font-mono text-[10px] text-muted-foreground">{replayFrames.length.toLocaleString()} frames</span></div><p className="mt-1 truncate text-xs text-muted-foreground">{replayFile || "No candump log selected"}</p></div>
-            <div className="grid grid-cols-[1fr_auto] gap-3"><select value={replaySpeed} onChange={(e) => setReplaySpeed(Number(e.target.value))} className="h-9 rounded-md border bg-background px-3 text-sm"><option value={0.25}>0.25×</option><option value={0.5}>0.5×</option><option value={1}>Realtime 1×</option><option value={2}>2×</option><option value={4}>4×</option><option value={10}>10×</option><option value={50}>50×</option></select><label className="flex items-center gap-2 rounded-md border px-3 text-xs"><Switch size="sm" checked={replayLoop} onCheckedChange={setReplayLoop} /> Loop</label></div>
+            <div className="grid grid-cols-[1fr_auto] gap-3"><select value={replaySpeed} onChange={(e) => changeReplaySpeed(Number(e.target.value))} className="h-9 rounded-md border bg-background px-3 text-sm"><option value={0.25}>0.25×</option><option value={0.5}>0.5×</option><option value={1}>Realtime 1×</option><option value={2}>2×</option><option value={4}>4×</option><option value={10}>10×</option><option value={50}>50×</option></select><label className="flex items-center gap-2 rounded-md border px-3 text-xs"><Switch size="sm" checked={replayLoop} onCheckedChange={setReplayLoop} /> Loop</label></div>
             <Button className="w-full" disabled={!replayFrames.length} onClick={() => startReplay()}><Play /> Start replay</Button>
           </div>
           <div className="space-y-2"><label className="text-[10px] font-semibold uppercase tracking-[.12em] text-muted-foreground">Live bridge WebSocket</label><div className="flex gap-2"><Input value={liveUrl} onChange={(e) => setLiveUrl(e.target.value)} /><Button variant="outline" onClick={connectLive}>Connect</Button></div><p className="text-[11px] leading-5 text-muted-foreground">The bridge only receives frames. Configure <code>can0</code> as listen-only before starting it.</p></div>

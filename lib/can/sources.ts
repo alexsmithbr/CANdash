@@ -39,24 +39,30 @@ export class DemoSource {
 export class ReplaySource {
   private paused = false;
   private runId = 0;
+  private speed = 1;
 
   async start(frames: CanFrame[], speed: number, loop: boolean, sink: FrameSink, onProgress: (current: number, total: number) => void, startIndex = 0) {
     const runId = ++this.runId;
+    this.speed = Math.max(0.01, speed);
     let firstIndex = Math.max(0, Math.min(frames.length - 1, startIndex));
     do {
-      const wallStart = performance.now();
-      const captureStart = frames[firstIndex]?.timestamp ?? 0;
-      let pauseStarted = 0;
-      let pauseTotal = 0;
+      let wallCursor = performance.now();
+      let captureCursor = frames[firstIndex]?.timestamp ?? 0;
       for (let index = firstIndex; index < frames.length; index += 1) {
         if (runId !== this.runId) return;
         while (this.paused && runId === this.runId) {
-          if (!pauseStarted) pauseStarted = performance.now();
           await new Promise((resolve) => setTimeout(resolve, 50));
+          wallCursor = performance.now();
         }
-        if (pauseStarted) { pauseTotal += performance.now() - pauseStarted; pauseStarted = 0; }
-        const target = wallStart + pauseTotal + (frames[index].timestamp - captureStart) / speed;
-        while (runId === this.runId && performance.now() < target) await new Promise((resolve) => setTimeout(resolve, Math.min(20, target - performance.now())));
+        while (runId === this.runId && captureCursor < frames[index].timestamp) {
+          if (this.paused) break;
+          const wallNow = performance.now();
+          captureCursor += Math.max(0, wallNow - wallCursor) * this.speed;
+          wallCursor = wallNow;
+          const remaining = Math.max(0, frames[index].timestamp - captureCursor);
+          if (remaining > 0) await new Promise((resolve) => setTimeout(resolve, Math.min(20, remaining / this.speed)));
+        }
+        if (this.paused) { index -= 1; continue; }
         if (runId !== this.runId) return;
         sink({ ...frames[index], timestamp: performance.now() });
         if (index % 100 === 0) onProgress(index, frames.length);
@@ -67,6 +73,7 @@ export class ReplaySource {
   }
 
   setPaused(paused: boolean) { this.paused = paused; }
+  setSpeed(speed: number) { this.speed = Math.max(0.01, speed); }
   stop() { this.runId += 1; this.paused = false; }
 }
 

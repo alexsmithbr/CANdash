@@ -5,6 +5,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Button } from "@/components/ui/button";
 import { Combobox, ComboboxContent, ComboboxEmpty, ComboboxInput, ComboboxItem, ComboboxList } from "@/components/ui/combobox";
 import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
 import { KNOWN_SIGNAL_SOURCES } from "@/lib/can/profile";
 import { formulaIsValid, formulaRatioReferences, formulaReferences } from "@/lib/can/formula";
 import type { ByteOrder, DiscoveryEntry, GaugeDefinition, GaugeType, SignalSource } from "@/lib/can/types";
@@ -67,6 +68,7 @@ export function GaugeDialog({ open, entry, gauge, dbcSources, profileGauges, onO
   const [conversionPreset, setConversionPreset] = useState("none"), [conversionScale, setConversionScale] = useState("1"), [conversionOffset, setConversionOffset] = useState("0"), [displayUnit, setDisplayUnit] = useState("");
   const [smoothingMethod, setSmoothingMethod] = useState<"none" | "ema" | "moving-average">("none"), [smoothingWindowMs, setSmoothingWindowMs] = useState("3000");
   const [historyWindowMs, setHistoryWindowMs] = useState("30000"), [longAverageMethod, setLongAverageMethod] = useState<"none" | "time-weighted" | "ratio-of-integrals">("none");
+  const [showStatistics, setShowStatistics] = useState(false), [showMinimum, setShowMinimum] = useState(true), [showAverage, setShowAverage] = useState(true), [showMaximum, setShowMaximum] = useState(true), [showStatisticValues, setShowStatisticValues] = useState(true);
   const [formula, setFormula] = useState(""), [error, setError] = useState("");
 
   const candidates = useMemo<KnownCandidate[]>(() => {
@@ -101,7 +103,9 @@ export function GaugeDialog({ open, entry, gauge, dbcSources, profileGauges, onO
         setInputMode(gauge.formula ? "formula" : "signal"); setTitle(gauge.title); setGaugeType(gauge.gaugeType === "formula" ? "numeric" : gauge.gaugeType === "histogram" ? "history" : gauge.gaugeType); setMinimum(String(gauge.minimum)); setMaximum(String(gauge.maximum ?? 100)); setStaleAfterMs(String(gauge.staleAfterMs));
         setFormula(gauge.formula?.expression ?? ""); setDisplayUnit(gauge.formula?.unit ?? gauge.conversion?.unit ?? source?.signal.unit ?? "");
         setConversionPreset(gauge.conversion?.preset ?? "none"); setConversionScale(String(gauge.conversion?.scale ?? 1)); setConversionOffset(String(gauge.conversion?.offset ?? 0));
+        const statisticsDisplay = gauge.statisticsDisplay;
         setSmoothingMethod(gauge.smoothing?.method ?? "none"); setSmoothingWindowMs(String(gauge.smoothing?.windowMs ?? 3000)); setHistoryWindowMs(String(gauge.historyWindowMs ?? 30000)); setLongAverageMethod(gauge.longAverage?.enabled ? gauge.longAverage.method : "none");
+        setShowStatistics(statisticsDisplay?.enabled ?? Boolean(gauge.showStatistics)); setShowMinimum(statisticsDisplay?.showMinimum ?? true); setShowAverage(statisticsDisplay?.showAverage ?? true); setShowMaximum(statisticsDisplay?.showMaximum ?? true); setShowStatisticValues(statisticsDisplay?.showValues ?? true);
         if (source) {
           setSa(source.sourceAddress == null ? "" : source.sourceAddress.toString(16).padStart(2, "0").toUpperCase()); setPgn(String(source.pgn));
           setSignalName(source.signal.name); setStartBit(String(source.signal.startBit)); setLength(String(source.signal.length)); setByteOrder(source.signal.byteOrder);
@@ -109,7 +113,7 @@ export function GaugeDialog({ open, entry, gauge, dbcSources, profileGauges, onO
         }
         setKnownIndex("custom"); return;
       }
-      setInputMode("signal"); setStaleAfterMs("3000"); setConversionPreset("none"); setConversionScale("1"); setConversionOffset("0"); setFormula(""); setSmoothingMethod("none"); setSmoothingWindowMs("3000"); setHistoryWindowMs("30000"); setLongAverageMethod("none");
+      setInputMode("signal"); setStaleAfterMs("3000"); setConversionPreset("none"); setConversionScale("1"); setConversionOffset("0"); setFormula(""); setSmoothingMethod("none"); setSmoothingWindowMs("3000"); setHistoryWindowMs("30000"); setLongAverageMethod("none"); setShowStatistics(false); setShowMinimum(true); setShowAverage(true); setShowMaximum(true); setShowStatisticValues(true);
       setSa(entry ? entry.sourceAddress.toString(16).padStart(2, "0").toUpperCase() : "00"); setPgn(entry ? String(entry.pgn) : "65265");
       const match = candidates[0];
       if (match) applyKnown(match, "0");
@@ -148,7 +152,8 @@ export function GaugeDialog({ open, entry, gauge, dbcSources, profileGauges, onO
     const min = number(minimum), max = number(maximum, 100), stale = number(staleAfterMs, 3000);
     const smoothing = { method: smoothingMethod, windowMs: Math.max(100, number(smoothingWindowMs, 3000)) } as const;
     const longAverage = { enabled: longAverageMethod !== "none", method: longAverageMethod === "ratio-of-integrals" ? "ratio-of-integrals" as const : "time-weighted" as const };
-    const common = { title: title.trim(), gaugeType, minimum: min, maximum: max, staleAfterMs: stale, smoothing, historyWindowMs: Math.max(1000, number(historyWindowMs, 30000)), longAverage };
+    const statisticsDisplay = { enabled: showStatistics, showMinimum, showAverage, showMaximum, showValues: showStatisticValues };
+    const common = { title: title.trim(), gaugeType, minimum: min, maximum: max, staleAfterMs: stale, smoothing, historyWindowMs: Math.max(1000, number(historyWindowMs, 30000)), longAverage, statisticsDisplay };
     if (!title.trim() || max <= min || stale < 100) { setError("Enter a title, an increasing range, and a stale timeout of at least 100 ms."); return; }
     if (inputMode === "formula") {
       const references = formulaReferences(formula);
@@ -209,8 +214,8 @@ export function GaugeDialog({ open, entry, gauge, dbcSources, profileGauges, onO
         <div className={field}><label className={label}>Gauge title</label><Input value={title} onChange={(event) => setTitle(event.target.value)} /></div>
         <div className={field}><label className={label}>Gauge type</label><select value={gaugeType} onChange={(event) => setGaugeType(event.target.value as GaugeType)} className="h-9 w-full rounded-md border bg-background px-3 text-sm">{GAUGE_TYPES.map((value) => <option key={value} value={value}>{GAUGE_TYPE_LABELS[value] ?? value}</option>)}</select></div>
         {inputMode === "formula" ? <>
-          <div className={`${field} sm:col-span-2`}><label className={label}>Formula</label><Input value={formula} onChange={(event) => setFormula(event.target.value)} placeholder="{vehicle-speed} / {fuel-rate}" /><p className="text-[11px] leading-5 text-muted-foreground">Reference gauges with braces. Operators: + − × ÷ % ^. Functions: min, max, abs, sqrt, round, floor, ceil, pow, clamp.</p></div>
-          <div className={`${field} sm:col-span-2`}><label className={label}>Available gauge IDs</label><div className="flex flex-wrap gap-1.5">{profileGauges.filter((item) => item.id !== gauge?.id && !item.formula).map((item) => <button type="button" key={item.id} onClick={() => setFormula((value) => `${value}${value ? " " : ""}{${item.id}}`)} className="rounded-md border px-2 py-1 font-mono text-[10px] text-primary">{item.id}</button>)}</div></div>
+          <div className={`${field} sm:col-span-2`}><label className={label}>Formula</label><Input value={formula} onChange={(event) => setFormula(event.target.value)} placeholder="AVG({vehicle-speed}) / AVG({fuel-rate})" /><p className="text-[11px] leading-5 text-muted-foreground">Reference current values with braces or session time-weighted values with AVG({`{gauge-id}`}). Operators: + − × ÷ % ^. Functions: min, max, abs, sqrt, round, floor, ceil, pow, clamp.</p></div>
+          <div className={`${field} sm:col-span-2`}><label className={label}>Available gauge IDs</label><div className="flex flex-wrap gap-1.5">{profileGauges.filter((item) => item.id !== gauge?.id && !item.formula).map((item) => <span key={item.id} className="inline-flex overflow-hidden rounded-md border"><button type="button" onClick={() => setFormula((value) => `${value}${value ? " " : ""}{${item.id}}`)} className="px-2 py-1 font-mono text-[10px] text-primary">{item.id}</button><button type="button" onClick={() => setFormula((value) => `${value}${value ? " " : ""}AVG({${item.id}})`)} className="border-l px-2 py-1 font-mono text-[10px] text-amber-300" aria-label={`Insert session average of ${item.id}`}>AVG</button></span>)}</div></div>
           <div className={field}><label className={label}>Output unit</label><Input value={displayUnit} onChange={(event) => setDisplayUnit(event.target.value)} /></div>
         </> : <>
           <div className={field}><label className={label}>Source address (hex, blank = any)</label><Input value={sa} onChange={(event) => setSa(event.target.value)} /></div>
@@ -228,6 +233,18 @@ export function GaugeDialog({ open, entry, gauge, dbcSources, profileGauges, onO
         <div className={field}><label className={label}>Display smoothing</label><select value={smoothingMethod} onChange={(event) => setSmoothingMethod(event.target.value as "none" | "ema" | "moving-average")} className="h-9 w-full rounded-md border bg-background px-3 text-sm"><option value="none">None</option><option value="ema">Exponential moving average</option><option value="moving-average">Rolling mean</option></select></div>
         {smoothingMethod !== "none" && <div className={field}><label className={label}>Smoothing period (ms)</label><Input type="number" min="100" step="100" value={smoothingWindowMs} onChange={(event) => setSmoothingWindowMs(event.target.value)} /><p className="text-[11px] text-muted-foreground">3,000–5,000 ms works well for instantaneous economy.</p></div>}
         <div className={field}><label className={label}>Long AVG</label><select value={longAverageMethod} onChange={(event) => setLongAverageMethod(event.target.value as "none" | "time-weighted" | "ratio-of-integrals")} className="h-9 w-full rounded-md border bg-background px-3 text-sm"><option value="none">Hidden</option><option value="time-weighted">Session time-weighted AVG</option>{inputMode === "formula" && <option value="ratio-of-integrals">Session ratio of integrals</option>}</select></div>
+        {(["speedometer", "tachometer", "radial", "pressure"] as GaugeType[]).includes(gaugeType) && <section className="space-y-3 rounded-lg border bg-muted/15 p-3 sm:col-span-2" aria-label="Session marker settings">
+          <div className="flex items-center justify-between gap-4">
+            <div><p className="text-xs font-medium">Session markers</p><p className="mt-0.5 text-[11px] text-muted-foreground">Place selected session statistics directly across the circular gauge arc.</p></div>
+            <Switch size="sm" checked={showStatistics} onCheckedChange={setShowStatistics} aria-label="Show session markers" />
+          </div>
+          {showStatistics && <div className="grid gap-2 border-t pt-3 sm:grid-cols-2">
+            <label className="flex h-8 items-center justify-between rounded-md border bg-background/40 px-2.5 text-xs"><span>MIN marker</span><Switch size="sm" checked={showMinimum} onCheckedChange={setShowMinimum} /></label>
+            <label className="flex h-8 items-center justify-between rounded-md border bg-background/40 px-2.5 text-xs"><span>AVG marker</span><Switch size="sm" checked={showAverage} onCheckedChange={setShowAverage} /></label>
+            <label className="flex h-8 items-center justify-between rounded-md border bg-background/40 px-2.5 text-xs"><span>MAX marker</span><Switch size="sm" checked={showMaximum} onCheckedChange={setShowMaximum} /></label>
+            <label className="flex h-8 items-center justify-between rounded-md border bg-background/40 px-2.5 text-xs"><span>Show marker values</span><Switch size="sm" checked={showStatisticValues} onCheckedChange={setShowStatisticValues} /></label>
+          </div>}
+        </section>}
         {(gaugeType === "history" || gaugeType === "histogram") && <div className={field}><label className={label}>Line history (seconds)</label><Input type="number" min="1" max="600" value={String(number(historyWindowMs, 30000) / 1000)} onChange={(event) => setHistoryWindowMs(String(number(event.target.value, 30) * 1000))} /></div>}
       </div>
       {error && <p className="rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-xs text-destructive">{error}</p>}

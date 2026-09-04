@@ -4,7 +4,8 @@ import { ChevronLeft, ChevronRight, GripVertical, Pencil, Trash2 } from "lucide-
 import { Button } from "@/components/ui/button";
 import { ChartContainer } from "@/components/ui/chart";
 import { formatHex } from "@/lib/can/j1939";
-import type { GaugeDefinition, GaugeHistoryPoint, GaugeReading } from "@/lib/can/types";
+import { normalizedStatisticsDisplay } from "@/lib/can/statistics-display";
+import type { GaugeDefinition, GaugeHistoryPoint, GaugeReading, GaugeStatistics } from "@/lib/can/types";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 
 type Props = {
@@ -12,6 +13,7 @@ type Props = {
   reading?: GaugeReading;
   history: GaugeHistoryPoint[];
   now: number;
+  paused: boolean;
   editing: boolean;
   onMove: (direction: -1 | 1) => void;
   onEdit: () => void;
@@ -38,7 +40,7 @@ function gaugeArcPath(radius: number) {
   return `M ${start.x} ${start.y} A ${radius} ${radius} 0 0 1 ${middle.x} ${middle.y} A ${radius} ${radius} 0 0 1 ${end.x} ${end.y}`;
 }
 
-function RadialGauge({ gauge, value, stale }: { gauge: GaugeDefinition; value?: number; stale: boolean }) {
+function RadialGauge({ gauge, value, statistics, stale }: { gauge: GaugeDefinition; value?: number | null; statistics?: GaugeStatistics; stale: boolean }) {
   const max = gauge.maximum ?? 100;
   const bounded = Math.max(gauge.minimum, Math.min(max, value ?? gauge.minimum));
   const ratio = (bounded - gauge.minimum) / Math.max(0.0001, max - gauge.minimum);
@@ -46,14 +48,33 @@ function RadialGauge({ gauge, value, stale }: { gauge: GaugeDefinition; value?: 
   const end = start + 270 * ratio;
   const major = gauge.gaugeType === "speedometer" || gauge.gaugeType === "tachometer";
   const track = gaugeArcPath(78);
+  const display = normalizedStatisticsDisplay(gauge);
+  const markers = statistics && display.enabled ? [
+    display.showMinimum ? { label: "MIN", value: statistics.minimum, color: "#f4f43a" } : null,
+    display.showAverage ? { label: "AVG", value: statistics.average, color: "#315cff" } : null,
+    display.showMaximum ? { label: "MAX", value: statistics.maximum, color: "#f4f43a" } : null,
+  ].filter((marker): marker is { label: string; value: number; color: string } => marker != null) : [];
   return (
-    <div className={`relative mx-auto ${major ? "h-52 w-52" : "h-40 w-40"}`}>
-      <svg viewBox="0 0 200 200" className="h-full w-full" aria-hidden="true">
+    <div className={`relative mx-auto w-full ${major ? "h-56 max-w-[17rem]" : "h-44 max-w-56"}`}>
+      <svg viewBox="-40 -18 280 238" className="h-full w-full" role="img" aria-label={markers.length ? "Circular gauge with session statistic markers" : "Circular gauge"}>
         <path d={track} fill="none" stroke="#263633" strokeWidth="12" strokeLinecap="round" />
         <path d={track} pathLength="100" fill="none" stroke={stale ? "#52635e" : "#2ee59d"} strokeWidth="12" strokeLinecap="round" strokeDasharray={`${ratio * 100} 100`} className="gauge-glow transition-[stroke-dasharray] duration-150" />
         {Array.from({ length: 11 }, (_, index) => {
           const angle = start + index * 27, p1 = point(angle, 63), p2 = point(angle, 69);
           return <line key={index} x1={p1.x} y1={p1.y} x2={p2.x} y2={p2.y} stroke="#77908a" strokeWidth="2" />;
+        })}
+        {markers.map((marker) => {
+          const markerRatio = Math.max(0, Math.min(1, (marker.value - gauge.minimum) / Math.max(0.0001, max - gauge.minimum)));
+          const angle = start + 270 * markerRatio;
+          const p1 = point(angle, 67), p2 = point(angle, 89), labelPoint = point(angle, 101);
+          const textAnchor = labelPoint.x < 78 ? "end" : labelPoint.x > 122 ? "start" : "middle";
+          const dy = labelPoint.y < 10 ? -2 : labelPoint.y > 165 ? 4 : 1;
+          return <g key={marker.label}>
+            <line x1={p1.x} y1={p1.y} x2={p2.x} y2={p2.y} stroke={marker.color} strokeWidth="5" strokeLinecap="round" />
+            <text x={labelPoint.x} y={labelPoint.y} dy={dy} textAnchor={textAnchor} dominantBaseline="middle" fill="#f4fffb" fontSize="10" fontWeight="700" fontFamily="ui-monospace, SFMono-Regular, Menlo, monospace">
+              {marker.label}{display.showValues ? ` ${marker.value.toFixed(gaugeDecimals(gauge))}` : ""}
+            </text>
+          </g>;
         })}
         <line x1="100" y1="100" x2={point(end, 59).x} y2={point(end, 59).y} stroke={stale ? "#64736f" : "#f4fffb"} strokeWidth="3" strokeLinecap="round" className="transition-all duration-150" />
         <circle cx="100" cy="100" r="7" fill={stale ? "#53635f" : "#2ee59d"} />
@@ -68,7 +89,7 @@ function RadialGauge({ gauge, value, stale }: { gauge: GaugeDefinition; value?: 
   );
 }
 
-function HistoryGauge({ gauge, value, history, stale }: { gauge: GaugeDefinition; value?: number; history: GaugeHistoryPoint[]; stale: boolean }) {
+function HistoryGauge({ gauge, value, history, stale }: { gauge: GaugeDefinition; value?: number | null; history: GaugeHistoryPoint[]; stale: boolean }) {
   const windowSeconds = Math.round((gauge.historyWindowMs ?? 30000) / 1000);
   const step = Math.max(1, Math.ceil(history.length / 240));
   const latest = history.at(-1)?.timestamp ?? 0;
@@ -90,7 +111,7 @@ function HistoryGauge({ gauge, value, history, stale }: { gauge: GaugeDefinition
   </div>;
 }
 
-function NumericGauge({ gauge, value, stale }: { gauge: GaugeDefinition; value?: number; stale: boolean }) {
+function NumericGauge({ gauge, value, stale }: { gauge: GaugeDefinition; value?: number | null; stale: boolean }) {
   const formatted = stale || value == null ? "—" : gauge.gaugeType === "odometer"
     ? value.toLocaleString(undefined, { minimumFractionDigits: gaugeDecimals(gauge), maximumFractionDigits: gaugeDecimals(gauge) })
     : value.toFixed(gaugeDecimals(gauge));
@@ -113,7 +134,7 @@ function NumericGauge({ gauge, value, stale }: { gauge: GaugeDefinition; value?:
   );
 }
 
-function TemperatureGauge({ gauge, value, stale }: { gauge: GaugeDefinition; value?: number; stale: boolean }) {
+function TemperatureGauge({ gauge, value, stale }: { gauge: GaugeDefinition; value?: number | null; stale: boolean }) {
   const maximum = gauge.maximum ?? 100;
   const ratio = Math.max(0, Math.min(1, ((value ?? gauge.minimum) - gauge.minimum) / Math.max(0.0001, maximum - gauge.minimum)));
   return <div className="flex min-h-40 items-center justify-center gap-6">
@@ -122,7 +143,7 @@ function TemperatureGauge({ gauge, value, stale }: { gauge: GaugeDefinition; val
   </div>;
 }
 
-export function GaugeCard({ gauge, reading, history, now, editing, onMove, onEdit, onRemove }: Props) {
+export function GaugeCard({ gauge, reading, history, now, paused, editing, onMove, onEdit, onRemove }: Props) {
   const stale = !reading || now - reading.updatedAt > gauge.staleAfterMs;
   const source = gauge.sources[reading?.sourceIndex ?? 0] ?? gauge.sources[0];
   const major = gauge.gaugeType === "speedometer" || gauge.gaugeType === "tachometer";
@@ -137,12 +158,12 @@ export function GaugeCard({ gauge, reading, history, now, editing, onMove, onEdi
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <span key={reading?.pulse ?? 0} title={stale ? "No recent update" : "Fresh update"} className={`size-2.5 rounded-full ${stale ? "bg-[#40504c]" : "led-pulse bg-primary"}`} />
+          <span key={reading?.pulse ?? 0} title={paused ? "Replay paused" : stale ? "No recent update" : "Fresh update"} className={`size-2.5 rounded-full ${stale ? "bg-[#40504c]" : "led-pulse bg-primary"}`} style={{ animationPlayState: paused ? "paused" : "running" }} />
           {editing && <GripVertical className="size-4 text-muted-foreground" />}
         </div>
       </header>
       <div className="mt-2">
-        {gauge.gaugeType === "histogram" || gauge.gaugeType === "history" ? <HistoryGauge gauge={gauge} value={reading?.value} history={history} stale={stale} /> : gauge.gaugeType === "temperature" ? <TemperatureGauge gauge={gauge} value={reading?.value} stale={stale} /> : major || gauge.gaugeType === "radial" || gauge.gaugeType === "pressure" ? <RadialGauge gauge={gauge} value={reading?.value} stale={stale} /> : <NumericGauge gauge={gauge} value={reading?.value} stale={stale} />}
+        {gauge.gaugeType === "histogram" || gauge.gaugeType === "history" ? <HistoryGauge gauge={gauge} value={reading?.value} history={history} stale={stale} /> : gauge.gaugeType === "temperature" ? <TemperatureGauge gauge={gauge} value={reading?.value} stale={stale} /> : major || gauge.gaugeType === "radial" || gauge.gaugeType === "pressure" ? <RadialGauge gauge={gauge} value={reading?.value} statistics={reading?.statistics} stale={stale} /> : <NumericGauge gauge={gauge} value={reading?.value} stale={stale} />}
       </div>
       {gauge.longAverage?.enabled && reading?.longAverage != null && <div className="mb-3 flex items-baseline justify-between rounded-md border bg-muted/20 px-3 py-2"><span className="text-[10px] font-semibold uppercase tracking-[.14em] text-muted-foreground">Long AVG</span><span className="font-mono text-sm font-semibold text-primary">{reading.longAverage.toFixed(gaugeDecimals(gauge))} <small className="font-sans text-[9px] font-medium uppercase text-muted-foreground">{gaugeUnit(gauge)}</small></span></div>}
       <footer className="mt-1 flex items-center justify-between border-t pt-3 text-[10px] text-muted-foreground">

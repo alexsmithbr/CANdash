@@ -39,6 +39,17 @@ export type GaugeDefinition = {
   smoothing?: SmoothingDefinition;
   historyWindowMs?: number;
   longAverage?: LongAverageDefinition;
+  statisticsDisplay?: StatisticsDisplayDefinition;
+  /** Legacy v0.5 setting. New profiles use statisticsDisplay. */
+  showStatistics?: boolean;
+};
+
+export type StatisticsDisplayDefinition = {
+  enabled: boolean;
+  showMinimum: boolean;
+  showAverage: boolean;
+  showMaximum: boolean;
+  showValues: boolean;
 };
 
 export type SmoothingDefinition = {
@@ -90,13 +101,21 @@ export type J1939Id = {
 };
 
 export type GaugeReading = {
-  value: number;
+  value: number | null;
   rawValue?: number;
   updatedAt: number;
   sourceIndex: number;
   pulse: number;
   dependencyPulse?: string;
   longAverage?: number;
+  statistics?: GaugeStatistics;
+};
+
+export type GaugeStatistics = {
+  minimum: number;
+  average: number;
+  maximum: number;
+  sampleCount: number;
 };
 
 export type GaugeHistoryPoint = {
