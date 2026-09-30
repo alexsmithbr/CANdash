@@ -6,8 +6,8 @@ Validated on 2026-09-30.
 - ESLint: passed with no warnings
 - Node test suite: 15/15 passed
 - Python bridge syntax compilation: passed
-- README local asset/link check: passed (4 local references)
-- README visual assets: gauge capture, development USB–CAN photo, and original hardware-topology SVG
+- README local asset/link check: passed (9 local references)
+- README visual assets: three cropped 2036×1134 application screenshots; a 14-second, 1000×558, 8 fps replay GIF (678 KiB); three normalized MKS CANable Pro images; and the original hardware-topology SVG
 - Prior browser checks retained: radial path alignment, hexadecimal signal search, and live line-history rendering
 - Included replay sample: 77,174 classic CAN frames parsed
 - Built-in gauges receiving usable sample data: 9/9
@@ -34,7 +34,8 @@ build.
 
 Browser automation was not repeated for version 0.7.1 because the runtime browser
 cannot reach the isolated local preview server. The documentation-only update was
-validated through the production build and explicit local-reference checks.
+validated through the production build, explicit local-reference checks, and
+visual inspection of every raster asset and representative screencast frames.
 The production build and component type-checking cover the marker configuration
 controls, per-statistic visibility, optional numeric labels, 1 px strokes, and
 the radial, thermometer, history, bar, numeric, formula, and odometer paths.

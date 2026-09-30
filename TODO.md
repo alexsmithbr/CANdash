@@ -56,7 +56,7 @@ partial features were extended rather than duplicated.
 ## Version 0.7.1
 
 - [x] Improve the project README and add visual material for the dashboard and recommended hardware.
-  - 2026-09-30 — Reworked the README as an open-source project landing page, added a real gauge capture and development USB–CAN photograph, documented suggested laptop/Raspberry Pi and remote-browser setups, and created an original receive-only hardware topology illustration.
+  - 2026-09-30 — Reworked the README as an open-source project landing page, documented suggested laptop/Raspberry Pi and remote-browser setups, and created an original receive-only hardware topology illustration. Replaced the synthetic dashboard preview with cropped, optimized captures of the real Dashboard, Discover, and Faults views; added normalized product, pinout, and in-use hardware photographs; and converted a 14-second replay excerpt into a compact animated GIF instead of embedding the MP4.
 
 ## Deliberate boundary
 

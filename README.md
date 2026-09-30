@@ -16,7 +16,7 @@
 </p>
 
 <p align="center">
-  <img src="docs/images/candash-gauge-card.png" width="470" alt="CANdash engine-speed gauge running in a browser">
+  <img src="docs/images/candash-dashboard.png" width="100%" alt="CANdash dashboard replaying a Volare J1939 capture with live gauges and session statistics">
 </p>
 
 CANdash turns SAE J1939 traffic into configurable browser gauges. It was built
@@ -50,8 +50,19 @@ session MIN, time-weighted AVG, and MAX markers, with separate visibility
 controls for each statistic and its numeric label.
 
 <p align="center">
-  <img src="docs/images/hardware-topology.svg" width="100%" alt="Recommended CANdash vehicle hardware topology">
+  <img src="docs/images/candash-replay.gif" width="1000" alt="Animated CANdash replay showing gauges responding to recorded J1939 traffic">
 </p>
+
+<p align="center"><em>Recorded J1939 replay: gauges, session statistics, freshness, and activity indicators all use the same pipeline as Live CAN.</em></p>
+
+| Passive network discovery | Read-only DM1 diagnostics |
+| --- | --- |
+| <img src="docs/images/candash-discovery.png" alt="CANdash Discover page listing observed source addresses and PGNs"> | <img src="docs/images/candash-faults.png" alt="CANdash read-only J1939 DM1 fault page"> |
+
+The screenshots use a real Volare capture in Replay mode. Source-address/PGN
+pairs can be promoted directly from Discover into configurable gauges, while
+the diagnostics view decodes passive DM1 traffic without transmitting requests
+onto the vehicle network.
 
 ## Features
 
@@ -150,13 +161,21 @@ interface. A practical setup is:
 | Display | Existing laptop, HDMI touchscreen, Android/LineageOS tablet, or phone | Any modern browser on the trusted LAN can display CANdash |
 | Vehicle power | Automotive-rated DC/DC supply, ideally with orderly shutdown support | Important for a permanently installed Raspberry Pi |
 
+<p align="center">
+  <img src="docs/images/hardware-topology.svg" width="100%" alt="Recommended CANdash vehicle hardware topology">
+</p>
+
 <details>
 <summary><strong>Development USB–CAN adapter</strong></summary>
 
 <br>
 
+| MKS CANable Pro | Connectors and indicators |
+| --- | --- |
+| <img src="docs/images/mks-canable-pro.jpg" alt="MKS CANable Pro isolated USB CAN adapter"> | <img src="docs/images/mks-canable-pro-pinout.jpg" alt="MKS CANable Pro connector, termination, boot, USB, and indicator locations"> |
+
 <p align="center">
-  <img src="docs/images/candlelight-usb-can.jpg" width="850" alt="candleLight-compatible isolated USB CAN adapter used during CANdash development">
+  <img src="docs/images/mks-canable-pro-in-use.jpg" width="900" alt="MKS CANable Pro used during CANdash development with the R120 termination jumper installed">
 </p>
 
 The photographed adapter is candleLight/gs_usb compatible and includes an
