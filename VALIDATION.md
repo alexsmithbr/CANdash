@@ -1,10 +1,10 @@
 # Validation report
 
-Validated on 2026-09-04.
+Validated on 2026-09-27.
 
 - Production Vinext build: passed
 - ESLint: passed with no warnings
-- Node test suite: 14/14 passed
+- Node test suite: 15/15 passed
 - Python bridge syntax compilation: passed
 - Prior browser checks retained: radial path alignment, hexadecimal signal search, and live line-history rendering
 - Included replay sample: 77,174 classic CAN frames parsed
@@ -24,14 +24,16 @@ The automated tests cover J1939 identifier extraction, corrected Volare signal
 scales, invalid/error encodings, candump nanosecond timestamps, direct DM1,
 BAM transport reassembly, DBC parsing, safe formula parsing/evaluation,
 `AVG({gauge-id})` formula inputs, zero-value validity, time-based EMA smoothing,
-time-weighted/ratio-integral averaging, session min/average/max statistics, and
-v0.5 statistics-profile migration, and server-rendered product content. Replay
-controls and the configurable circular arc-marker renderer are also checked by
-the production TypeScript build.
+time-weighted/ratio-integral averaging, session min/average/max statistics,
+v0.5 statistics-profile migration, per-statistic marker selection/range
+positioning, and server-rendered product content. Replay controls and every
+geometry-specific marker renderer are also checked by the production TypeScript
+build.
 
-Browser automation was not repeated for version 0.6 because it was not requested.
+Browser automation was not repeated for version 0.7 because it was not requested.
 The production build and component type-checking cover the marker configuration
-controls, per-statistic visibility, optional numeric labels, and radial geometry.
+controls, per-statistic visibility, optional numeric labels, 1 px strokes, and
+the radial, thermometer, history, bar, numeric, formula, and odometer paths.
 
 - Supplied generic `j1939.dbc` parser check: 546 messages parsed
 - Usable non-placeholder DBC content: 543 messages / 3,818 signals

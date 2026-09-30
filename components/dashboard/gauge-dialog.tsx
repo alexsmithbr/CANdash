@@ -233,9 +233,9 @@ export function GaugeDialog({ open, entry, gauge, dbcSources, profileGauges, onO
         <div className={field}><label className={label}>Display smoothing</label><select value={smoothingMethod} onChange={(event) => setSmoothingMethod(event.target.value as "none" | "ema" | "moving-average")} className="h-9 w-full rounded-md border bg-background px-3 text-sm"><option value="none">None</option><option value="ema">Exponential moving average</option><option value="moving-average">Rolling mean</option></select></div>
         {smoothingMethod !== "none" && <div className={field}><label className={label}>Smoothing period (ms)</label><Input type="number" min="100" step="100" value={smoothingWindowMs} onChange={(event) => setSmoothingWindowMs(event.target.value)} /><p className="text-[11px] text-muted-foreground">3,000–5,000 ms works well for instantaneous economy.</p></div>}
         <div className={field}><label className={label}>Long AVG</label><select value={longAverageMethod} onChange={(event) => setLongAverageMethod(event.target.value as "none" | "time-weighted" | "ratio-of-integrals")} className="h-9 w-full rounded-md border bg-background px-3 text-sm"><option value="none">Hidden</option><option value="time-weighted">Session time-weighted AVG</option>{inputMode === "formula" && <option value="ratio-of-integrals">Session ratio of integrals</option>}</select></div>
-        {(["speedometer", "tachometer", "radial", "pressure"] as GaugeType[]).includes(gaugeType) && <section className="space-y-3 rounded-lg border bg-muted/15 p-3 sm:col-span-2" aria-label="Session marker settings">
+        <section className="space-y-3 rounded-lg border bg-muted/15 p-3 sm:col-span-2" aria-label="Session marker settings">
           <div className="flex items-center justify-between gap-4">
-            <div><p className="text-xs font-medium">Session markers</p><p className="mt-0.5 text-[11px] text-muted-foreground">Place selected session statistics directly across the circular gauge arc.</p></div>
+            <div><p className="text-xs font-medium">Session markers</p><p className="mt-0.5 text-[11px] text-muted-foreground">Show selected session statistics using this gauge&apos;s own geometry.</p></div>
             <Switch size="sm" checked={showStatistics} onCheckedChange={setShowStatistics} aria-label="Show session markers" />
           </div>
           {showStatistics && <div className="grid gap-2 border-t pt-3 sm:grid-cols-2">
@@ -244,7 +244,7 @@ export function GaugeDialog({ open, entry, gauge, dbcSources, profileGauges, onO
             <label className="flex h-8 items-center justify-between rounded-md border bg-background/40 px-2.5 text-xs"><span>MAX marker</span><Switch size="sm" checked={showMaximum} onCheckedChange={setShowMaximum} /></label>
             <label className="flex h-8 items-center justify-between rounded-md border bg-background/40 px-2.5 text-xs"><span>Show marker values</span><Switch size="sm" checked={showStatisticValues} onCheckedChange={setShowStatisticValues} /></label>
           </div>}
-        </section>}
+        </section>
         {(gaugeType === "history" || gaugeType === "histogram") && <div className={field}><label className={label}>Line history (seconds)</label><Input type="number" min="1" max="600" value={String(number(historyWindowMs, 30000) / 1000)} onChange={(event) => setHistoryWindowMs(String(number(event.target.value, 30) * 1000))} /></div>}
       </div>
       {error && <p className="rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-xs text-destructive">{error}</p>}

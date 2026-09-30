@@ -46,6 +46,13 @@ partial features were extended rather than duplicated.
 - [x] Put individually configurable MIN, AVG, and MAX markers on circular gauge arcs.
   - 2026-09-04 — Replaced the separate statistics strip with radial strokes at their actual values, plus master, per-marker, and numeric-value visibility switches with v0.5 profile compatibility.
 
+## Version 0.7.0
+
+- [x] Extend the configurable session MIN, AVG, and MAX display to every applicable gauge type, including temperature, bar, numeric, odometer, and line-history gauges. Preserve the master switch, independent statistic switches, and optional numeric values while adapting the marker presentation to each gauge's geometry.
+  - 2026-09-27 — Added horizontal thermometer and history references, linear range markers for bar/numeric/formula/odometer gauges, and made the existing controls available for every gauge type.
+- [x] Make the MIN, AVG, and MAX marker strokes finer. Start with a 1 px width and use no more than 2 px if additional visibility is needed after testing across screen sizes.
+  - 2026-09-27 — Reduced radial and non-radial statistic strokes to 1 px while retaining the yellow MIN/MAX and blue AVG distinction.
+
 ## Deliberate boundary
 
 Session-long statistics reset with the data source. Persisting multi-trip or

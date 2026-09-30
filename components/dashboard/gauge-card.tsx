@@ -4,9 +4,9 @@ import { ChevronLeft, ChevronRight, GripVertical, Pencil, Trash2 } from "lucide-
 import { Button } from "@/components/ui/button";
 import { ChartContainer } from "@/components/ui/chart";
 import { formatHex } from "@/lib/can/j1939";
-import { normalizedStatisticsDisplay } from "@/lib/can/statistics-display";
+import { normalizedStatisticsDisplay, sessionStatisticMarkers, sessionStatisticPosition, type SessionStatisticMarker } from "@/lib/can/statistics-display";
 import type { GaugeDefinition, GaugeHistoryPoint, GaugeReading, GaugeStatistics } from "@/lib/can/types";
-import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
+import { CartesianGrid, Line, LineChart, ReferenceLine, XAxis, YAxis } from "recharts";
 
 type Props = {
   gauge: GaugeDefinition;
@@ -40,6 +40,25 @@ function gaugeArcPath(radius: number) {
   return `M ${start.x} ${start.y} A ${radius} ${radius} 0 0 1 ${middle.x} ${middle.y} A ${radius} ${radius} 0 0 1 ${end.x} ${end.y}`;
 }
 
+function markerLabel(gauge: GaugeDefinition, marker: SessionStatisticMarker) {
+  return normalizedStatisticsDisplay(gauge).showValues ? `${marker.label} ${marker.value.toFixed(gaugeDecimals(gauge))}` : marker.label;
+}
+
+function StatisticsLegend({ gauge, markers }: { gauge: GaugeDefinition; markers: SessionStatisticMarker[] }) {
+  if (!markers.length) return null;
+  return <div className="mt-2 flex flex-wrap items-center justify-between gap-x-3 gap-y-1 font-mono text-[9px] font-semibold uppercase tracking-[.06em]" aria-label="Session statistics">
+    {markers.map((marker) => <span key={marker.key} style={{ color: marker.color }}>{markerLabel(gauge, marker)}</span>)}
+  </div>;
+}
+
+function LinearMarkerLines({ gauge, markers, fallbackMaximum, heightClass = "h-3" }: { gauge: GaugeDefinition; markers: SessionStatisticMarker[]; fallbackMaximum?: number; heightClass?: string }) {
+  return <>{markers.map((marker) => <span
+    key={marker.key}
+    className={`pointer-events-none absolute top-1/2 z-10 w-px -translate-x-1/2 -translate-y-1/2 ${heightClass}`}
+    style={{ left: `${sessionStatisticPosition(gauge, marker.value, fallbackMaximum) * 100}%`, backgroundColor: marker.color }}
+  />)}</>;
+}
+
 function RadialGauge({ gauge, value, statistics, stale }: { gauge: GaugeDefinition; value?: number | null; statistics?: GaugeStatistics; stale: boolean }) {
   const max = gauge.maximum ?? 100;
   const bounded = Math.max(gauge.minimum, Math.min(max, value ?? gauge.minimum));
@@ -48,12 +67,7 @@ function RadialGauge({ gauge, value, statistics, stale }: { gauge: GaugeDefiniti
   const end = start + 270 * ratio;
   const major = gauge.gaugeType === "speedometer" || gauge.gaugeType === "tachometer";
   const track = gaugeArcPath(78);
-  const display = normalizedStatisticsDisplay(gauge);
-  const markers = statistics && display.enabled ? [
-    display.showMinimum ? { label: "MIN", value: statistics.minimum, color: "#f4f43a" } : null,
-    display.showAverage ? { label: "AVG", value: statistics.average, color: "#315cff" } : null,
-    display.showMaximum ? { label: "MAX", value: statistics.maximum, color: "#f4f43a" } : null,
-  ].filter((marker): marker is { label: string; value: number; color: string } => marker != null) : [];
+  const markers = sessionStatisticMarkers(gauge, statistics);
   return (
     <div className={`relative mx-auto w-full ${major ? "h-56 max-w-[17rem]" : "h-44 max-w-56"}`}>
       <svg viewBox="-40 -18 280 238" className="h-full w-full" role="img" aria-label={markers.length ? "Circular gauge with session statistic markers" : "Circular gauge"}>
@@ -64,15 +78,15 @@ function RadialGauge({ gauge, value, statistics, stale }: { gauge: GaugeDefiniti
           return <line key={index} x1={p1.x} y1={p1.y} x2={p2.x} y2={p2.y} stroke="#77908a" strokeWidth="2" />;
         })}
         {markers.map((marker) => {
-          const markerRatio = Math.max(0, Math.min(1, (marker.value - gauge.minimum) / Math.max(0.0001, max - gauge.minimum)));
+          const markerRatio = sessionStatisticPosition(gauge, marker.value, max);
           const angle = start + 270 * markerRatio;
           const p1 = point(angle, 67), p2 = point(angle, 89), labelPoint = point(angle, 101);
           const textAnchor = labelPoint.x < 78 ? "end" : labelPoint.x > 122 ? "start" : "middle";
           const dy = labelPoint.y < 10 ? -2 : labelPoint.y > 165 ? 4 : 1;
-          return <g key={marker.label}>
-            <line x1={p1.x} y1={p1.y} x2={p2.x} y2={p2.y} stroke={marker.color} strokeWidth="5" strokeLinecap="round" />
+          return <g key={marker.key}>
+            <line x1={p1.x} y1={p1.y} x2={p2.x} y2={p2.y} stroke={marker.color} strokeWidth="1" />
             <text x={labelPoint.x} y={labelPoint.y} dy={dy} textAnchor={textAnchor} dominantBaseline="middle" fill="#f4fffb" fontSize="10" fontWeight="700" fontFamily="ui-monospace, SFMono-Regular, Menlo, monospace">
-              {marker.label}{display.showValues ? ` ${marker.value.toFixed(gaugeDecimals(gauge))}` : ""}
+              {markerLabel(gauge, marker)}
             </text>
           </g>;
         })}
@@ -89,7 +103,7 @@ function RadialGauge({ gauge, value, statistics, stale }: { gauge: GaugeDefiniti
   );
 }
 
-function HistoryGauge({ gauge, value, history, stale }: { gauge: GaugeDefinition; value?: number | null; history: GaugeHistoryPoint[]; stale: boolean }) {
+function HistoryGauge({ gauge, value, history, statistics, stale }: { gauge: GaugeDefinition; value?: number | null; history: GaugeHistoryPoint[]; statistics?: GaugeStatistics; stale: boolean }) {
   const windowSeconds = Math.round((gauge.historyWindowMs ?? 30000) / 1000);
   const step = Math.max(1, Math.ceil(history.length / 240));
   const latest = history.at(-1)?.timestamp ?? 0;
@@ -97,6 +111,7 @@ function HistoryGauge({ gauge, value, history, stale }: { gauge: GaugeDefinition
     seconds: (point.timestamp - latest) / 1000,
     value: point.value,
   }));
+  const markers = sessionStatisticMarkers(gauge, statistics);
   return <div className="min-h-44 pt-2">
     <div className="flex items-baseline gap-2"><span className={`font-mono text-3xl font-semibold tracking-[-.05em] ${stale ? "text-muted-foreground" : "text-foreground"}`}>{stale || value == null ? "—" : value.toFixed(gaugeDecimals(gauge))}</span><span className="text-xs font-semibold uppercase tracking-[.14em] text-muted-foreground">{gaugeUnit(gauge)}</span></div>
     <ChartContainer config={{ value: { label: gauge.title, color: "#2ee59d" } }} className="mt-3 h-32 w-full aspect-auto" initialDimension={{ width: 420, height: 128 }}>
@@ -104,6 +119,7 @@ function HistoryGauge({ gauge, value, history, stale }: { gauge: GaugeDefinition
         <CartesianGrid stroke="#263633" strokeDasharray="3 4" />
         <XAxis dataKey="seconds" type="number" domain={[-windowSeconds, 0]} hide />
         <YAxis hide domain={[gauge.minimum, gauge.maximum ?? "auto"]} />
+        {markers.map((marker) => <ReferenceLine key={marker.key} y={marker.value} stroke={marker.color} strokeWidth={1} strokeDasharray="3 3" label={{ value: markerLabel(gauge, marker), position: "insideTopRight", fill: marker.color, fontSize: 9 }} />)}
         <Line type="linear" dataKey="value" stroke="var(--color-value)" strokeWidth={2} dot={false} isAnimationActive={false} opacity={stale ? 0.35 : 0.9} />
       </LineChart>
     </ChartContainer>
@@ -111,35 +127,41 @@ function HistoryGauge({ gauge, value, history, stale }: { gauge: GaugeDefinition
   </div>;
 }
 
-function NumericGauge({ gauge, value, stale }: { gauge: GaugeDefinition; value?: number | null; stale: boolean }) {
+function NumericGauge({ gauge, value, statistics, stale }: { gauge: GaugeDefinition; value?: number | null; statistics?: GaugeStatistics; stale: boolean }) {
   const formatted = stale || value == null ? "—" : gauge.gaugeType === "odometer"
     ? value.toLocaleString(undefined, { minimumFractionDigits: gaugeDecimals(gauge), maximumFractionDigits: gaugeDecimals(gauge) })
     : value.toFixed(gaugeDecimals(gauge));
   const ratio = gauge.maximum == null || value == null ? 0 : Math.max(0, Math.min(1, (value - gauge.minimum) / (gauge.maximum - gauge.minimum)));
+  const markers = sessionStatisticMarkers(gauge, statistics);
+  const fallbackMaximum = statistics ? Math.max(statistics.maximum, gauge.minimum + 1) : undefined;
   return (
     <div className="flex min-h-36 flex-col justify-center">
       <div className={`font-mono text-4xl font-semibold tracking-[-.05em] ${stale ? "text-muted-foreground" : "text-foreground"}`}>{formatted}</div>
       <div className="mt-2 text-xs font-semibold uppercase tracking-[.18em] text-muted-foreground">{gaugeUnit(gauge)}</div>
       {gauge.gaugeType === "bar" && (
-        <div className="mt-7 h-2 overflow-hidden rounded-full bg-[#263633]">
+        <div className="relative mt-7 h-2 rounded-full bg-[#263633]">
           <div className="h-full rounded-full bg-primary shadow-[0_0_14px_rgba(46,229,157,.3)] transition-[width] duration-200" style={{ width: `${ratio * 100}%` }} />
+          <LinearMarkerLines gauge={gauge} markers={markers} fallbackMaximum={fallbackMaximum} heightClass="h-4" />
         </div>
       )}
       {gauge.maximum != null && gauge.gaugeType !== "odometer" && gauge.gaugeType !== "bar" && (
         <div className="mt-7 flex items-center gap-3 text-[10px] text-muted-foreground">
-          <span>{gauge.minimum}</span><div className="h-px flex-1 bg-border"><div className="h-px bg-primary" style={{ width: `${ratio * 100}%` }} /></div><span>{gauge.maximum}</span>
+          <span>{gauge.minimum}</span><div className="relative h-px flex-1 bg-border"><div className="h-px bg-primary" style={{ width: `${ratio * 100}%` }} /><LinearMarkerLines gauge={gauge} markers={markers} fallbackMaximum={fallbackMaximum} /></div><span>{gauge.maximum}</span>
         </div>
       )}
+      {gauge.gaugeType === "odometer" && markers.length > 0 && <div className="relative mt-7 h-px bg-border"><LinearMarkerLines gauge={gauge} markers={markers} fallbackMaximum={fallbackMaximum} /></div>}
+      <StatisticsLegend gauge={gauge} markers={markers} />
     </div>
   );
 }
 
-function TemperatureGauge({ gauge, value, stale }: { gauge: GaugeDefinition; value?: number | null; stale: boolean }) {
+function TemperatureGauge({ gauge, value, statistics, stale }: { gauge: GaugeDefinition; value?: number | null; statistics?: GaugeStatistics; stale: boolean }) {
   const maximum = gauge.maximum ?? 100;
   const ratio = Math.max(0, Math.min(1, ((value ?? gauge.minimum) - gauge.minimum) / Math.max(0.0001, maximum - gauge.minimum)));
+  const markers = sessionStatisticMarkers(gauge, statistics);
   return <div className="flex min-h-40 items-center justify-center gap-6">
-    <div className="relative h-36 w-10" aria-hidden="true"><div className="absolute bottom-1 left-1/2 h-10 w-10 -translate-x-1/2 rounded-full border-[5px] border-[#263633] bg-[#263633]" /><div className="absolute bottom-8 left-1/2 h-[108px] w-4 -translate-x-1/2 overflow-hidden rounded-t-full border-4 border-[#263633] bg-[#12201d]"><div className={`absolute inset-x-0 bottom-0 transition-[height] duration-200 ${stale ? "bg-[#52635e]" : "bg-primary"}`} style={{ height: `${ratio * 100}%` }} /></div><div className={`absolute bottom-3 left-1/2 size-6 -translate-x-1/2 rounded-full ${stale ? "bg-[#52635e]" : "bg-primary shadow-[0_0_16px_rgba(46,229,157,.35)]"}`} /></div>
-    <div><div className={`font-mono text-4xl font-semibold tracking-[-.05em] ${stale ? "text-muted-foreground" : "text-foreground"}`}>{stale || value == null ? "—" : value.toFixed(gaugeDecimals(gauge))}</div><div className="mt-2 text-xs font-semibold uppercase tracking-[.18em] text-muted-foreground">{gaugeUnit(gauge)}</div><p className="mt-5 font-mono text-[10px] text-muted-foreground">{gauge.minimum} — {maximum}</p></div>
+    <div className="relative h-36 w-10" aria-hidden="true"><div className="absolute bottom-1 left-1/2 h-10 w-10 -translate-x-1/2 rounded-full border-[5px] border-[#263633] bg-[#263633]" /><div className="absolute bottom-8 left-1/2 h-[108px] w-4 -translate-x-1/2 overflow-hidden rounded-t-full border-4 border-[#263633] bg-[#12201d]"><div className={`absolute inset-x-0 bottom-0 transition-[height] duration-200 ${stale ? "bg-[#52635e]" : "bg-primary"}`} style={{ height: `${ratio * 100}%` }} /></div><div className={`absolute bottom-3 left-1/2 size-6 -translate-x-1/2 rounded-full ${stale ? "bg-[#52635e]" : "bg-primary shadow-[0_0_16px_rgba(46,229,157,.35)]"}`} />{markers.map((marker) => <span key={marker.key} className="absolute left-1/2 z-10 h-px w-12 -translate-x-1/2" style={{ bottom: `${32 + sessionStatisticPosition(gauge, marker.value, maximum) * 108}px`, backgroundColor: marker.color }} />)}</div>
+    <div><div className={`font-mono text-4xl font-semibold tracking-[-.05em] ${stale ? "text-muted-foreground" : "text-foreground"}`}>{stale || value == null ? "—" : value.toFixed(gaugeDecimals(gauge))}</div><div className="mt-2 text-xs font-semibold uppercase tracking-[.18em] text-muted-foreground">{gaugeUnit(gauge)}</div><p className="mt-5 font-mono text-[10px] text-muted-foreground">{gauge.minimum} — {maximum}</p><StatisticsLegend gauge={gauge} markers={markers} /></div>
   </div>;
 }
 
@@ -163,7 +185,7 @@ export function GaugeCard({ gauge, reading, history, now, paused, editing, onMov
         </div>
       </header>
       <div className="mt-2">
-        {gauge.gaugeType === "histogram" || gauge.gaugeType === "history" ? <HistoryGauge gauge={gauge} value={reading?.value} history={history} stale={stale} /> : gauge.gaugeType === "temperature" ? <TemperatureGauge gauge={gauge} value={reading?.value} stale={stale} /> : major || gauge.gaugeType === "radial" || gauge.gaugeType === "pressure" ? <RadialGauge gauge={gauge} value={reading?.value} statistics={reading?.statistics} stale={stale} /> : <NumericGauge gauge={gauge} value={reading?.value} stale={stale} />}
+        {gauge.gaugeType === "histogram" || gauge.gaugeType === "history" ? <HistoryGauge gauge={gauge} value={reading?.value} history={history} statistics={reading?.statistics} stale={stale} /> : gauge.gaugeType === "temperature" ? <TemperatureGauge gauge={gauge} value={reading?.value} statistics={reading?.statistics} stale={stale} /> : major || gauge.gaugeType === "radial" || gauge.gaugeType === "pressure" ? <RadialGauge gauge={gauge} value={reading?.value} statistics={reading?.statistics} stale={stale} /> : <NumericGauge gauge={gauge} value={reading?.value} statistics={reading?.statistics} stale={stale} />}
       </div>
       {gauge.longAverage?.enabled && reading?.longAverage != null && <div className="mb-3 flex items-baseline justify-between rounded-md border bg-muted/20 px-3 py-2"><span className="text-[10px] font-semibold uppercase tracking-[.14em] text-muted-foreground">Long AVG</span><span className="font-mono text-sm font-semibold text-primary">{reading.longAverage.toFixed(gaugeDecimals(gauge))} <small className="font-sans text-[9px] font-medium uppercase text-muted-foreground">{gaugeUnit(gauge)}</small></span></div>}
       <footer className="mt-1 flex items-center justify-between border-t pt-3 text-[10px] text-muted-foreground">

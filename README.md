@@ -151,11 +151,13 @@ integrating km/h and L/h produces total km divided by total litres, rather than
 the mathematically misleading mean of instantaneous km/L values. Long averages
 reset when a source starts or a replay is repositioned.
 
-Circular gauges can place session minimum, time-weighted average, and maximum
-markers directly across their dial arc at the corresponding values. The gauge
-editor has a master switch plus independent MIN, AVG, and MAX switches. Marker
-labels remain visible when their numeric values are hidden. MIN and MAX use
-yellow strokes; AVG uses blue. Profiles created by version 0.5 with the former
+Every gauge type can display session minimum, time-weighted average, and
+maximum using its own geometry: radial ticks on circular gauges, horizontal
+reference lines on thermometers and history plots, and range ticks on bar,
+numeric, formula, and odometer gauges. The gauge editor has a master switch
+plus independent MIN, AVG, and MAX switches. Marker labels remain visible when
+their numeric values are hidden. All marker strokes are 1 px; MIN and MAX use
+yellow while AVG uses blue. Profiles created by version 0.5 with the former
 single statistics switch are read as all three markers and values enabled.
 
 Line-history gauges plot recent smoothed values over time, similar to a compact

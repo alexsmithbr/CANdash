@@ -4,7 +4,7 @@ import { decodeDm1, decodeSignal, parseCandump, parseJ1939Id, TransportProtocolA
 import { parseDbc } from "../lib/can/dbc.ts";
 import { evaluateFormula, formulaIsValid, formulaRatioReferences, formulaReferences } from "../lib/can/formula.ts";
 import { newAverageState, newSmoothingState, newStatisticsState, smoothValue, updateLongAverage, updateStatistics } from "../lib/can/telemetry.ts";
-import { normalizedStatisticsDisplay } from "../lib/can/statistics-display.ts";
+import { normalizedStatisticsDisplay, sessionStatisticMarkers, sessionStatisticPosition } from "../lib/can/statistics-display.ts";
 
 const signal = (startBit, length, scale, offset, minimum, maximum) => ({
   name: "test", startBit, length, scale, offset, minimum, maximum,
@@ -131,4 +131,24 @@ test("keeps v0.5 statistics profiles compatible with configurable markers", () =
     showMaximum: false,
     showValues: false,
   });
+});
+
+test("selects and positions individually configured session markers", () => {
+  const gauge = {
+    minimum: 0,
+    maximum: 200,
+    statisticsDisplay: {
+      enabled: true,
+      showMinimum: false,
+      showAverage: true,
+      showMaximum: true,
+      showValues: false,
+    },
+  };
+  const statistics = { minimum: 0, average: 75, maximum: 180, sampleCount: 10 };
+  const markers = sessionStatisticMarkers(gauge, statistics);
+  assert.deepEqual(markers.map((marker) => marker.key), ["average", "maximum"]);
+  assert.equal(sessionStatisticPosition(gauge, markers[0].value), 0.375);
+  assert.equal(sessionStatisticPosition(gauge, markers[1].value), 0.9);
+  assert.deepEqual(sessionStatisticMarkers({ ...gauge, statisticsDisplay: { ...gauge.statisticsDisplay, enabled: false } }, statistics), []);
 });
