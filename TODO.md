@@ -53,6 +53,11 @@ partial features were extended rather than duplicated.
 - [x] Make the MIN, AVG, and MAX marker strokes finer. Start with a 1 px width and use no more than 2 px if additional visibility is needed after testing across screen sizes.
   - 2026-09-27 — Reduced radial and non-radial statistic strokes to 1 px while retaining the yellow MIN/MAX and blue AVG distinction.
 
+## Version 0.7.1
+
+- [x] Improve the project README and add visual material for the dashboard and recommended hardware.
+  - 2026-09-30 — Reworked the README as an open-source project landing page, added a real gauge capture and development USB–CAN photograph, documented suggested laptop/Raspberry Pi and remote-browser setups, and created an original receive-only hardware topology illustration.
+
 ## Deliberate boundary
 
 Session-long statistics reset with the data source. Persisting multi-trip or

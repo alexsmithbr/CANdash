@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="520" viewBox="0 0 1200 520" role="img" aria-labelledby="title desc">
+  <title id="title">Recommended CANdash hardware topology</title>
+  <desc id="desc">A vehicle J1939 bus connects through an isolated USB CAN adapter to a Linux laptop or Raspberry Pi, which serves dashboards to browser clients.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#081412"/>
+      <stop offset="1" stop-color="#0d1d1a"/>
+    </linearGradient>
+    <linearGradient id="panel" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#142723"/>
+      <stop offset="1" stop-color="#0d1a18"/>
+    </linearGradient>
+    <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="7" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0 0L10 5L0 10Z" fill="#69e6ac"/>
+    </marker>
+  </defs>
+
+  <rect width="1200" height="520" rx="28" fill="url(#bg)"/>
+  <rect x="1.5" y="1.5" width="1197" height="517" rx="27" fill="none" stroke="#28443d" stroke-width="3"/>
+
+  <text x="60" y="66" fill="#f1f7f4" font-family="system-ui, sans-serif" font-size="30" font-weight="700">Recommended live setup</text>
+  <text x="60" y="98" fill="#8da39d" font-family="system-ui, sans-serif" font-size="17">Receive-only J1939 data from the vehicle and view it on one or more browsers.</text>
+
+  <g transform="translate(55 150)">
+    <rect width="220" height="245" rx="24" fill="url(#panel)" stroke="#31544b" stroke-width="2"/>
+    <rect x="34" y="42" width="152" height="92" rx="24" fill="#182b27" stroke="#69e6ac" stroke-width="4"/>
+    <path d="M48 134v30M76 134v30M144 134v30M172 134v30" stroke="#69e6ac" stroke-width="5" stroke-linecap="round"/>
+    <circle cx="82" cy="88" r="19" fill="none" stroke="#d9fff0" stroke-width="4"/>
+    <path d="M82 69v38M63 88h38" stroke="#d9fff0" stroke-width="4"/>
+    <text x="110" y="196" text-anchor="middle" fill="#f1f7f4" font-family="system-ui, sans-serif" font-size="21" font-weight="700">Vehicle</text>
+    <text x="110" y="224" text-anchor="middle" fill="#8da39d" font-family="ui-monospace, monospace" font-size="15">J1939 · 250 kbit/s</text>
+  </g>
+
+  <path d="M286 273H366" fill="none" stroke="#69e6ac" stroke-width="4" marker-end="url(#arrow)"/>
+  <text x="326" y="250" text-anchor="middle" fill="#8da39d" font-family="ui-monospace, monospace" font-size="13">H · L · GND</text>
+
+  <g transform="translate(380 150)">
+    <rect width="220" height="245" rx="24" fill="url(#panel)" stroke="#31544b" stroke-width="2"/>
+    <rect x="34" y="52" width="152" height="82" rx="10" fill="#111b1a" stroke="#69e6ac" stroke-width="3"/>
+    <rect x="45" y="70" width="26" height="45" rx="4" fill="#9bacaa"/>
+    <rect x="83" y="70" width="58" height="45" rx="5" fill="#243d37"/>
+    <rect x="151" y="67" width="23" height="51" rx="3" fill="#4d7f6f"/>
+    <circle cx="95" cy="92" r="5" fill="#69e6ac" filter="url(#glow)"/>
+    <text x="110" y="178" text-anchor="middle" fill="#f1f7f4" font-family="system-ui, sans-serif" font-size="21" font-weight="700">USB–CAN</text>
+    <text x="110" y="204" text-anchor="middle" fill="#8da39d" font-family="system-ui, sans-serif" font-size="14">SocketCAN / candleLight</text>
+    <text x="110" y="227" text-anchor="middle" fill="#ffcf70" font-family="system-ui, sans-serif" font-size="13" font-weight="650">Isolation recommended</text>
+  </g>
+
+  <path d="M611 273H691" fill="none" stroke="#69e6ac" stroke-width="4" marker-end="url(#arrow)"/>
+  <text x="651" y="250" text-anchor="middle" fill="#8da39d" font-family="ui-monospace, monospace" font-size="13">USB</text>
+
+  <g transform="translate(705 150)">
+    <rect width="220" height="245" rx="24" fill="url(#panel)" stroke="#31544b" stroke-width="2"/>
+    <rect x="42" y="42" width="136" height="92" rx="8" fill="#07100f" stroke="#8da39d" stroke-width="4"/>
+    <path d="M74 148h72l19 17H55Z" fill="#8da39d"/>
+    <circle cx="110" cy="87" r="20" fill="none" stroke="#69e6ac" stroke-width="4"/>
+    <path d="M99 88l8 8l16-20" fill="none" stroke="#69e6ac" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="110" y="196" text-anchor="middle" fill="#f1f7f4" font-family="system-ui, sans-serif" font-size="21" font-weight="700">Linux host</text>
+    <text x="110" y="224" text-anchor="middle" fill="#8da39d" font-family="system-ui, sans-serif" font-size="14">Laptop or Raspberry Pi</text>
+  </g>
+
+  <path d="M936 273H1002" fill="none" stroke="#69e6ac" stroke-width="4" marker-end="url(#arrow)"/>
+  <text x="969" y="250" text-anchor="middle" fill="#8da39d" font-family="ui-monospace, monospace" font-size="13">Wi-Fi / LAN</text>
+
+  <g transform="translate(1015 150)">
+    <rect width="130" height="245" rx="24" fill="url(#panel)" stroke="#31544b" stroke-width="2"/>
+    <rect x="28" y="37" width="74" height="124" rx="10" fill="#07100f" stroke="#8da39d" stroke-width="4"/>
+    <circle cx="65" cy="148" r="4" fill="#8da39d"/>
+    <path d="M42 126l13-29l10 16l12-28l12 41Z" fill="none" stroke="#69e6ac" stroke-width="4" stroke-linejoin="round"/>
+    <text x="65" y="196" text-anchor="middle" fill="#f1f7f4" font-family="system-ui, sans-serif" font-size="19" font-weight="700">Browser</text>
+    <text x="65" y="222" text-anchor="middle" fill="#8da39d" font-family="system-ui, sans-serif" font-size="13">Tablet · phone</text>
+  </g>
+
+  <g transform="translate(56 440)">
+    <circle cx="9" cy="9" r="9" fill="#69e6ac" filter="url(#glow)"/>
+    <text x="28" y="15" fill="#c8d8d3" font-family="system-ui, sans-serif" font-size="15">CANdash keeps Demo, Replay, and Live CAN on the same decoding pipeline.</text>
+  </g>
+</svg>

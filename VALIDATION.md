@@ -1,11 +1,13 @@
 # Validation report
 
-Validated on 2026-09-27.
+Validated on 2026-09-30.
 
 - Production Vinext build: passed
 - ESLint: passed with no warnings
 - Node test suite: 15/15 passed
 - Python bridge syntax compilation: passed
+- README local asset/link check: passed (4 local references)
+- README visual assets: gauge capture, development USB–CAN photo, and original hardware-topology SVG
 - Prior browser checks retained: radial path alignment, hexadecimal signal search, and live line-history rendering
 - Included replay sample: 77,174 classic CAN frames parsed
 - Built-in gauges receiving usable sample data: 9/9
@@ -30,7 +32,9 @@ positioning, and server-rendered product content. Replay controls and every
 geometry-specific marker renderer are also checked by the production TypeScript
 build.
 
-Browser automation was not repeated for version 0.7 because it was not requested.
+Browser automation was not repeated for version 0.7.1 because the runtime browser
+cannot reach the isolated local preview server. The documentation-only update was
+validated through the production build and explicit local-reference checks.
 The production build and component type-checking cover the marker configuration
 controls, per-statistic visibility, optional numeric labels, 1 px strokes, and
 the radial, thermometer, history, bar, numeric, formula, and odometer paths.
